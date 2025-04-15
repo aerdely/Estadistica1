@@ -1,0 +1,1451 @@
+\documentclass[spanish,10pt,letterpaper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+%\usepackage{amsthm}
+
+\title{Vectores aleatorios y transformaciones}
+\author{Dr. Arturo Erdely \thanks{Profesor de Carrera Titular ``C'' de tiempo completo definitivo en la UNAM FES Acatlán. Email: aerdely@acatlan.unam.mx}}
+\date{}
+
+\setlength{\hoffset}{-2.8cm}
+\setlength{\voffset}{-2.8cm}
+\setlength{\textwidth}{180mm}
+\setlength{\textheight}{240mm}
+
+\newtheorem{defi}{Definición}
+\newtheorem{teo}{Teorema}
+\newtheorem{cor}{Corolario}
+\newtheorem{prop}{Proposición}
+\newtheorem{lema}{Lema}
+\newtheorem{obs}{Observación}
+\newtheorem{ejem}{Ejemplo}
+
+\newcommand{\prob}{\mathbb{P}}
+\newcommand{\esper}{\mathbb{E}}
+\newcommand{\vari}{\mathbb{V}}
+\newcommand{\Runo}{\mathbb{R}}
+\newcommand{\indic}{\textbf{\textsf{\large{1}}}}
+\newcommand{\qed}{\begin{flushright}$\square$\end{flushright}}
+
+
+
+
+\begin{document}
+	
+	\maketitle
+	
+	
+	
+	\section*{Introducción}\label{sec:intro}
+	
+	Esta sección es un repaso y resumen de algunos conceptos y resultados de un curso previo de Probabilidad, con el objeto de unificar notación y extender el concepto de variable aleatoria al de vector aleatorio.
+	
+	\medskip 
+	
+	A los \textit{fenómenos} (procesos que observa el ser humano sin intervenir en ellos) y a los \textit{experimentos} (procesos generados por el ser humano) se les añade el calificativo de \textit{aleatorios} cuando no hay certeza sobre su resultado. Matemáticamente se les representa por medio de un \textit{espacio de probabilidad} que consiste en una terna $(\Omega, \mathfrak{F}, \prob).$ El llamado \textit{espacio muestral} $\Omega$ es un conjunto de símbolos que representan cada uno de los posibles resultados del fenómeno o experimento aleatorio. $\mathfrak{F}$ es un conjunto de subconjuntos de $\Omega$ que representan eventos. Un \textit{evento} $\mathcal{E}$ es una proposición lógica cuya veracidad o falsedad queda determinada una vez que se conoce el resultado del fenómeno o experimento aleatorio, y el subconjunto $E\subseteq\Omega$ que representa a un evento $\mathcal{E}$ tiene como elementos aquellos símbolos de $\Omega$ que representan resultados que hacen verdadera la proposición lógica que define al evento $\mathcal{E}.$
+	
+	\bigskip 
+	
+	\begin{ejem}\label{ej:moneda3veces}
+		Considere el experimento aleatorio consistente en lanzar $3$ veces una moneda (a una cara la llamaremos ``águila'' y a la otra ``sol'') diseñada de tal forma que la probabilidad de que la cara ``águila'' quede hacia arriba es un valor $0<\theta<1$ (es decir, no necesariamente se trata de una moneda equilibrada). El espacio muestral puede representarse mediante el conjunto: 
+		\begin{eqnarray*}
+			\Omega &=& \left\{(\omega_1,\omega_2,\omega_3)\,:\,\omega_j\in\{a,s\}\right\} \\
+			&=& \{(a,a,a),(a,a,s),(a,s,a),(a,s,s),(s,a,a),(s,a,s),(s,s,a),(s,s,s)\}
+		\end{eqnarray*}		
+		En este caso $\Omega$ resulta ser un espacio muestral finito con un total de $2^3=8$ elementos (ternas en este caso) distintos. Un evento, entre muchos que podrían definirse, es el siguiente: $$\mathcal{E} \,\equiv\, \text{``se obtiene la misma cara de la moneda en los $3$ lanzamientos.''}$$
+		El subconjunto $E\subseteq\Omega$ que representa a dicho evento tiene solo dos elementos: $$E\,=\,\{(a,a,a)\,,\,(s,s,s)\}.$$ \qed 
+	\end{ejem}
+	
+		
+	Después de conocer un resultado de un fenómeno o experimento aleatorio se dice que un evento $\mathcal{E}$ ocurrió si la proposición lógica que lo define resulta ser verdadera, o equivalentemente, si el símbolo que representa a dicho resultado pertenece al conjunto $E$ que representa a dicho evento. En caso contrario, se dice que el evento no ocurrió. Dados dos eventos $\mathcal{E}_1$ y $\mathcal{E}_2$ representados por los subconjuntos $E_1$ y $E_2$ de $\Omega$ tenemos que la conjunción de proposiciones lógicas $\mathcal{E}_1\wedge\mathcal{E}_2$ es también una proposición lógica cuyo valor de verdad o falsedad depende de la ocurrencia simultánea de dichos eventos, y por tanto es un evento también, que queda representado por el subconjunto $E_1\cap E_2\subseteq\Omega.$ Comentario análogo para la disyunción lógica $\mathcal{E}_1\vee\mathcal{E}_2$ que queda representada por el subconjunto $E_1\cup E_2\subseteq\Omega.$ Más aún, nótese que lo anterior implica que si $E_1$ y $E_2$ pertenecen a $\mathfrak{F}$ entonces $E_1\cup E_2,$ $E_1\cap E_2,$ $E_1\setminus E_2,$ $E_2\setminus E_1$ también pertenecen a la colección $\mathfrak{F}.$
+	
+	\medskip 
+	
+	El tercer elemento de un espacio de probabilidad es una \textit{medida de probabilidad} $\prob,$ que es una función que a cada subconjunto $E\subseteq\Omega$ que representa a un evento le asocia un número real en el intervalo $[0,1],$ mismo que se denota $\prob(E),$ y que cuantifica el \textit{grado de incertidumbre} respecto a la ocurrencia del evento. $\prob(E)=1$ significa absoluta certeza de que ocurre el evento, $\prob(E)=0$ significa absoluta certeza de que no ocurre el evento, y en cualquier otro caso $0<\prob(E)<1$ significa que no hay certidumbre sobre la ocurrencia del evento. Si, por ejemplo, $\prob(E)=0{.}9$ es la probabilidad de que mañana llueva, aunque no hay certeza sobre que eso ocurra, el tener un valor más cercano a $1$ que a $0$ es información útil para tomar previsiones. En este sentido, el caso de mayor incertidumbre es cuando $\prob(E)=\frac{1}{2}$ ya que es el punto más lejano a la certeza, esto es, de $0$ y $1.$ La medida de probabilidad $\prob$ se deduce o aproxima con base en información que se tiene sobre el fenómeno o experimento aleatorio en cuestión. Pero en términos generales, cualquier medida de probabilidad satisface lo siguiente:
+	
+	\bigskip 
+	
+	\begin{defi} \label{def:medidaprob}
+		Una \textbf{medida de probabilidad} $\,\prob$ es una función que a todo subconjunto $E\subseteq\Omega$ que representa un evento le asocia un número real $\prob(E)\in[0,1]$ tal que:
+		\begin{itemize}
+			\item[a)] $\prob(\Omega)=1.$
+			\item[b)] Si $\{E_1,E_2,\ldots\}$ es una colección numerable de subconjuntos disjuntos de $\Omega$ que representan eventos entonces $$\prob\left(\bigcup_{n\,=\,1}^{\infty}E_n\right) \,=\, \sum_{n\,=\,1}^{\infty}\prob(E_n)\,.$$ \qed	
+		\end{itemize}
+	\end{defi} 
+		
+		
+	Si un evento resulta representado por $\Omega$ (esto es, la totalidad de resultados posibles) con toda certeza ocurre, y por ello es que se define $\prob(\Omega)=1,$ y a dicho evento se le denomina \textit{evento seguro.} Si dos eventos $\mathcal{E}_1$ y $\mathcal{E}_2$ están representados por subconjuntos disjuntos $E_1$ y $E_2,$ esto es, tales que $E_1\cap E_2=\varnothing,$ al no tener elementos en común esto implica que la ocurrencia de un evento garantiza la no ocurrencia del otro, y en tal caso se les denomina \textit{eventos mutuamente excluyentes} y, por lo tanto, la probabilidad de su unión (que representa la ocurrencia de uno o el otro evento) se define como la suma de sus probabilidades individuales: $\prob(E_1\cup E_2)=\prob(E_1)+\prob(E_2).$ Más aún, nótese que lo anterior implica también que $\Omega$ y  $\varnothing$ son elementos de $\mathfrak{F},$ y que si $E\in\mathfrak{F}$ entonces su complemento $\Omega\setminus E\in\mathfrak{F}.$ \footnote{De hecho, $\mathfrak{F}$ cumple con la definición de $\sigma$-álgebra de subconjuntos de $\Omega$, consúltense las referencias \cite{Domínguez} y \cite{Grimmett}.}
+	
+	\medskip 
+	
+	A partir de la Definición \ref{def:medidaprob}\, se deducen algunas otras propiedades que cumple cualquier medida de probabilidad que se utilice, y que se resumen en la siguiente proposición, cuya demostración se deja como ejercicio de repaso:
+	
+	\bigskip 
+	
+	\begin{prop}\label{prop:medidasprob}
+		Sea $(\Omega, \mathfrak{F}, \prob)$ un espacio de probabilidad que representa a un fenómeno o experimento aleatorio. Entonces, además de la Definición \ref{def:medidaprob}\,, la medida de probabilidad $\prob$ cumple las siguientes propiedades, dados $E_1$ y $E_2$ subconjuntos de $\Omega$ que representan eventos:
+		\begin{itemize}
+			\item[a)] $\prob(\Omega\setminus E_1)=1-\prob(E_1).$
+			\item[b)] $\prob(\varnothing)=0.$
+			\item[c)] $\prob(E_1\setminus E_2)=\prob(E_1)-\prob(E_1\cap E_2).$
+			\item[d)] Si $E_1\subseteq E_2$ entonces $\prob(E_1)\leq\prob(E_2).$
+			\item[e)] $\prob(E_1\cup E_2)=\prob(E_1)+\prob(E_2)-\prob(E_1\cap E_2).$ 
+			\item[f)] $\max\{\prob(E_1)+\prob(E_2)-1,0\}\,\leq\,\prob(E_1\cap E_2)\,\leq\,\min\{\prob(E_1),\prob(E_2)\}$ \qed 
+		\end{itemize}
+	\end{prop}
+	
+	Cuando un evento resulta representado por el conjunto vacío, y dado que $\prob(\varnothing)=0,$ entonces se le denomina \textit{evento imposible} ya que con toda certeza no ocurre. Cuando el conjunto que representa a un evento tiene un solo elemento de $\Omega$ se le denomina \textit{evento simple.} En el caso particular de que el espacio muestral sea un conjunto numerable (finito o infinito), lo denotamos de forma general $\Omega=\{\omega_1,\omega_2,\ldots\}$ y en tal caso notemos que $\Omega$ puede expresarse como una unión numerable de conjuntos disjuntos que representan eventos simples:
+	\begin{equation}\label{eq:omeganum}
+		\Omega \,=\, \bigcup_{n\,\geq\,1}\{\omega_n\}
+	\end{equation}
+	y por tanto cualquier subjunto $E\subseteq\Omega$ también puede expresarse como unión numerable de conjuntos disjuntos de un solo elemento cada uno, esto es: $$E \,=\, \bigcup_{\omega\,\in\,E}\{\omega\}$$ y aplicando la Definición \ref{def:medidaprob}\,b se obtiene que: 
+	\begin{equation}\label{eq:pnumerable}
+		\prob(E) \,=\, \sum_{\omega\,\in\,E}\prob(\{\omega\})
+	\end{equation}
+	es decir, que en el caso de espacios muestrales numerables basta poder calcular la probabilidad de los eventos simples, y por medio de (\ref{eq:pnumerable}) se puede calcular la probabilidad de cualquier evento no simple.
+	
+	\bigskip 
+	
+	\begin{ejem}\label{ej:equiprob}
+		Considere un espacio muestral finito $\Omega=\{\omega_1,\ldots,\omega_n\}$ donde todos los eventos simples representados por $\{\omega_j\}$ para $j\in\{1,\ldots,n\}$ tienen la misma probabilidad. A este caso particular se le denomina \textbf{espacio muestral equiprobable.} Como consecuencia de la Definición \ref{def:medidaprob}\,a y de (\ref{eq:omeganum}) se obtiene:
+		$$1 \,=\, \prob(\Omega) \,=\, \sum_{j\,=\,1}^{n}\prob(\{\omega_j\}) \,=\, n\prob(\{\omega_1\})$$
+		y por la condición de equiprobabilidad de todos los eventos simples se tiene que cualquier evento simple tiene probabilidad $\prob(\{\omega_j\})=\frac{1}{n}\,.$ Finalmente, como consecuencia de (\ref{eq:pnumerable}), se obtiene que la fórmula general para una medida de probabilidad $\prob$ en espacios muestrales (finitos) y equiprobables es:
+		\begin{equation}\label{eq:equiprob}
+			\prob(E) \,=\, \sum_{\omega\,\in\,E}\frac{1}{n} \,=\, \frac{|E|}{|\Omega|}
+		\end{equation}
+		donde la notación $|E|$ se refiere al número de elementos del conjunto. \qed
+	\end{ejem}
+	
+	
+	La medida de probabilidad se deduce o aproxima con base en la información inicial con que se cuenta en un momento dado respecto al fenómeno o experimento aleatorio en cuestión. Pero posterior a ello, puede surgir nueva información que implique una actualización de dicha medida. Por ejemplo, consideremos un fenómeno o experimento aleatorio representado inicialmente por un espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ así como dos eventos representados por los subconjuntos $A$ y $B$ en  $\mathfrak{F}.$ Supongamos que inicialmente las probabilidades de dichos eventos son $0<\prob(A)<1\,$ y $\,0<\prob(B)<1.$ Si posteriormente ocurre el evento representado por $B,$ entonces a la medida de probabilidad inicial $\prob$ habría que actualizarla y reemplazarla por una medida de probabilidad que denotaremos $\prob_B,$ de modo que $\prob_B(B)=1,$ y poder actualizar la probabilidad $\prob(A)$ mediante $\prob_B(A)$ (misma que puede cambiar o permanecer igual), que se denomina \textit{probabilidad condicional} de $A$ dado $B,$ y que debe cuantificar la incertidumbre del evento representado por $A$ pero ahora en términos relativos respecto a $B:$
+	
+	\medskip 
+	
+	\begin{defi}\label{def:probacond}
+		Dado un espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ y un evento representado por el subconjunto $B\in\mathfrak{F}$ tal que $0<\prob(B)<1,$ la actualización de la medida de probailidad $\prob$ ante la ocurrencia del evento representado por $B$ se denota $\prob_B$ y cuantifica la incertidumbre de cualquier evento $E\in\mathfrak{F}$ mediante: $$\prob_B(E) \,:=\, \frac{\prob(E\cap B)}{\prob(B)}$$ misma que se denomina probabilidad condicional de $E$ dado $B,$ quedando el espacio de probabilidad actualizado como $(\Omega,\mathfrak{F},\prob_B).$ \qed 		
+	\end{defi}
+	
+	Inicialmente los posibles resultados del fenómeno o experimento aleatorio están descritos por $\Omega,$ pero después de la ocurrencia de un evento representado por $B\subseteq\Omega$ el conjunto de posibles resultados se reduce justamente a $B,$ y por ello es que la cuantificación de la incertidumbre de todos los eventos deben ahora actualizarse en términos relativos, es decir, un evento que inicialmente estaba representado por $E\subseteq\Omega$ ahora queda representado por $E\cap B\subseteq B$ ya que cualquier resultado fuera de $B$ queda descartado. La notación $\prob_B$ deja claro que ha ocurrido un cambio de medida de probabilidad respecto a la inicial $\prob.$ Sin embargo, es más común la notación $\prob(E\,|\,B)$ en lugar de $\prob_B(E).$
+	
+	\medskip 
+	
+	Una vez actualizado un espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ a $(\Omega,\mathfrak{F},\prob_B)$ lo anterior no significa que necesariamente todas la probabilidades de los eventos cambiarán, en algunos casos sí, en otros no. Es decir, para cada evento $E\in\mathfrak{F}$ el valor de $\prob(E)$ puede o no ser distinto de $\prob_B(E).$ Cuando la probabilidad de un evento no cambia ante la ocurrencia de otro evento, estamos ante el concepto de independencia de un evento respecto a otro:
+	
+	\bigskip 
+	
+	\begin{defi}\label{def:indep2}
+		Dado un espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ y un evento representado por $B\in\mathfrak{F}$ tal que $0<\prob(B)<1$ se dice que un evento representado por $E\in\mathfrak{F}$ es un \textbf{evento independiente} de $B$ si: $$\prob_B(E)\,=\,\prob(E)\,.$$ \qed 
+	\end{defi}
+	
+	
+	Dados dos eventos representados por $A$ y $B$ en $\mathfrak{F}$ tales que $0<\prob(A)<1$ y $0<\prob(B)<1$ tenemos entonces que $A$ es independiente de $B$ si:
+	\begin{equation}\label{eq:AindepB}
+		\prob(A) \,=\, \prob_B(A) \,=\, \frac{\prob(A\cap B)}{\prob(B)}\,.	
+	\end{equation}
+	Similarmente, $B$ es independiente de $A$ si:
+	\begin{equation}\label{eq:BindepA}
+		\prob(B) \,=\, \prob_A(B) \,=\, \frac{\prob(A\cap B)}{\prob(A)}\,.	
+	\end{equation}
+	Notemos que de (\ref{eq:AindepB}) y (\ref{eq:BindepA}) se deduce en ambos casos que se debe cumplir la condición:
+	\begin{equation}\label{eq:indepeventos}
+		\prob(A\cap B) \,=\, \prob(A)\prob(B)
+	\end{equation}
+	por lo que podemos simplemente referir que dos eventos son independientes si y solo la probabilidad de su conjunción coincide con el producto de sus probabilidades individuales. En caso de que $\prob(A\cap B)\neq\prob(A)\prob(B)$ se dice que los eventos representados por $A$ y $B$ son \textbf{eventos dependientes}. Recordando que cuando dos eventos, representados por subconjuntos $A$ y $B,$ son mutuamente excluyentes entonces esto implica $A\cap B=\varnothing,$ si $\prob(A)>0$ y $\prob(B)>0$ entonces necesariamente son eventos dependientes ya que $\prob(A)\prob(B)>0=\prob(\varnothing)=\prob(A\cap B).$
+	
+	\medskip 
+	
+	Para extender el concepto de independencia a tres o más eventos, no basta que se cumpla que la probabilidad de conjunción de todos los eventos sea igual al producto de las probabilidades inidividuales de los mismos, pues es factible que ocurra esto último a pesar de existir dependencia, como se ilustra en el siguiente:
+	
+	\bigskip 
+	
+	\begin{ejem}\label{ej:indep3no2}
+		Sea un espacio muestral equiprobable $\Omega=\{a,b,c,d,e,f,g,h\}.$ Aplicando (\ref{eq:equiprob}) obtenemos que la medida de probabilidad correspondiente para cualquier evento representado por algún subconjunto $E\subseteq\Omega$ es, en este caso, $\prob(E)=\frac{|E|}{8}\,.$ Considere tres eventos representados por los siguientes subconjuntos de $\Omega:$ $$A=\{a,b,c,d\} \qquad,\qquad B=\{a,e,f,g\} \qquad,\qquad C=\{a,b,e,h\}\,.$$ Claramente $\prob(A)=\frac{1}{2}=\prob(B)=\prob(C),$ y por tanto su producto $\prob(A)\prob(B)\prob(C)=\frac{1}{8}\,.$ Por otro lado, notemos que $A\cap B\cap C=\{a\}$ y por tanto $\prob(A\cap B\cap C)=\frac{1}{8}\,,$ es decir, en este ejemplo particular tenemos que: $$\prob(A\cap B\cap C) \,=\,\prob(A)\prob(B)\prob(C)\,.$$ Sin embargo, lo anterior no implica independencia de eventos. Por ejemplo, $A\cap B=\{a\}$ y por tanto: $$\prob(A\cap B)\,=\,\frac{1}{8}\,\neq\,\frac{1}{4}=\prob(A)\prob(B)\,,$$ es decir, en este caso $A$ y $B$ \textbf{no} representan eventos independientes. \qed
+	\end{ejem}
+	
+	También puede ocurrir el caso en que exista independencia por pares de eventos, pero no así independencia de todos los eventos simultáneamente, como se ilustra en el siguiente:
+	
+	\bigskip 
+	
+	\begin{ejem}\label{ej:indep2no3}
+		Nuevamente el espacio muestral equiprobable del Ejemplo \ref{ej:indep3no2}\, anterior, pero ahora consideremos tres eventos representados por los siguientes subconjuntos de $\Omega:$ $$A=\{a,b,c,d\} \qquad,\qquad D=\{a,b,e,f\} \qquad,\qquad E=\{a,b,g,h\}\,.$$ Claramente $\prob(A)=\frac{1}{2}=\prob(D)=\prob(E).$ Más aún: $$A\cap D \,=\, \{a,b\} \,=\, A\cap E \,=\, D\cap E\,,$$ por lo que se cumple: $$\prob(A\cap D)=\frac{1}{4}=\prob(A)\prob(D)\,, \qquad \prob(A\cap E)=\frac{1}{4}=\prob(A)\prob(E)\,, \qquad \prob(D\cap E)=\frac{1}{4}=\prob(D)\prob(E)\,.$$ Es decir, los eventos representados por $A,$ $D$ y $E$ resultan ser independientes cuando solo se consideran dos de ellos a la vez, pero al ser considerados los tres simultáneamente se tiene que $A\cap D\cap E=\{a,b\}$ y por lo tanto: $$\prob(A\cap D\cap E) \,=\, \frac{1}{4} \,\neq\, \frac{1}{8} \,=\, \prob(A)\prob(D)\prob(E)\,.$$ Notemos que, por ejemplo: $$\prob_E(A\cap D) \,=\, \frac{\prob(A\cap D\cap E)}{\prob(E)} \,=\, \frac{\frac{1}{4}}{\frac{1}{2}} \,=\, \frac{1}{2} \,\neq\, \frac{1}{4} \,=\,\prob(A\cap D)\,,$$ esto es, la ocurrencia del evento representado por $E$ modifica la probabilidad de ocurrencia del evento representado por $A\cap D,$ a pesar de que $A$ y $D$ representan eventos independientes entre sí. \qed
+	\end{ejem}
+	
+	Para poder decir que una colección finita de eventos son independientes se requiere que lo sean por pares, por ternas, por cuartetas, etc. Esto es:
+	
+	\bigskip 
+	
+	\begin{defi}\label{def:indep}
+		Dado un espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ y $n$ eventos representados por $E_1,\ldots,E_n$ elementos de $\mathfrak{F},$ se les considera \textbf{eventos conjuntamente independientes}\,\footnote{Usualmente se omite la palabra \textit{conjuntamente}.} si cualquier subcolección de ellos $E_{i_1},\ldots,E_{i_m}\,,$ donde los subíndices $i_k$ son números enteros positivos tales que $1\leq i_1<\cdots<i_m\leq n,$ se satisface lo siguiente: $$\prob\left(\bigcap_{k\,=\,1}^m A_{i_k}\right) \,=\, \prod_{k\,=\,1}^m\prob(A_{i_k})\,.$$ \qed 
+	\end{defi}
+	
+	En los ejemplos \ref{ej:indep3no2}\, y \ref{ej:indep2no3}\, se ilustran casos en que los eventos considerados no son conjuntamente independientes, de acuerdo con la definición anterior. A continuación un ejemplo donde esto sí se cumple:
+	
+	\bigskip 
+	
+	\begin{ejem}\label{ej:indep}
+		Nuevamente el espacio muestral equiprobable del Ejemplo \ref{ej:indep3no2}\,, pero ahora consideremos tres eventos representados por los siguientes subconjuntos de $\Omega:$ $$E_1=\{a,b,c,d\} \qquad,\qquad E_2=\{a,b,e,f\} \qquad,\qquad E_3=\{a,c,e,g\}\,,$$donde claramente $\prob(E_j)=\frac{1}{2}$ para cada $j\in\{1,2,3\}.$ Como en este caso se tienen $n=3$ eventos en consideración, de acuerdo con la Definición \ref{def:indep}\, los casos no triviales a considerar corresponden a $m\in\{2,3\}.$ Para el caso $m=2$ las posibilidades de subíndices son $(i_1,i_2)\in\{(1,2),(1,3),(2,3)\}$ obteniendo lo siguiente:
+		\begin{align*}
+			E_1\cap E_2=\{a,b\} \quad\Rightarrow\quad \prob(E_1\cap E_2)=\frac{1}{4}\,=\,\prob(E_1)\prob(E_2)\,, \\
+			{ } \\
+			E_1\cap E_3=\{a,c\} \quad\Rightarrow\quad \prob(E_1\cap E_3)=\frac{1}{4}\,=\,\prob(E_1)\prob(E_3)\,, \\ 
+			{ } \\
+			E_2\cap E_3=\{a,e\} \quad\Rightarrow\quad \prob(E_2\cap E_3)=\frac{1}{4}\,=\,\prob(E_2)\prob(E_3)\,,
+		\end{align*}
+		con lo que ya se tiene, hasta el momento, independencia por pares de eventos. Ahora falta el caso simultáneo $m=3,$ que en este caso la única posibilidad de subíndices es $(i_1,i_2,i_3)=(1,2,3)$ por lo que basta analizar el caso: 
+		$$E_1\cap E_2\cap E_3 = \{a\} \quad\Rightarrow\quad \prob(E_1\cap E_2\cap E_3) = \frac{1}{8} = \prob(E_1)\prob(E_2)\prob(E_3)\,,$$
+		con lo que puede concluirse que los tres eventos representados por $E_1,$ $E_2$ y $E_3$ son conjuntamente independientes. \qed 
+	\end{ejem}
+	
+	Si $A$ y $B$ son subconjuntos de $\Omega$ que representan eventos independientes, entonces los eventos representados por $A$ y $\Omega\setminus B$ (complemento de $B$ respecto a $\Omega$) también son independientes ya que, como consecuencia de los incisos a) y c) de la Proposición \ref{prop:medidasprob}\, y de (\ref{eq:indepeventos}), se deduce que:
+	\begin{eqnarray*}
+		\prob\left(A\cap (\Omega\setminus B)\right) &=& \prob(A\setminus B) \,=\, \prob(A) - \prob(A\cap B) \\ 
+		                                            &=& \prob(A) - \prob(A)\prob(B) \,=\, \prob(A)[1-\prob(B)] \\ 
+		                                            &=& \prob(A)\prob\left(\Omega\setminus B\right),
+	\end{eqnarray*}
+	y de forma análoga se demuestra que los eventos representados por $\Omega\setminus A$ y $\Omega\setminus B$ también resultan ser independientes. Más aún, lo anterior puede generalizarse en la siguiente proposición, cuya demostración se deja como ejercicio:
+	
+	\bigskip 
+	
+	\begin{prop} \label{prop:indepcomplem}
+		Sea $(\Omega,\mathfrak{F},\prob)$ un espacio de probabilidad, y sean $E_1,\ldots,E_n$ subconjuntos de $\Omega$ que representan eventos conjuntamente independientes. Entonces los eventos representados por los subconjuntos $A_1,\ldots,A_n$ donde cada $A_j\in\{E_j,\Omega\setminus E_j\}$ también son conjuntamente independientes. \qed 
+	\end{prop}
+	
+	\begin{ejem} \label{ej:experimBinomial}
+		\textbf{Experimento aleatorio binomial.} Este tipo de experimento consiste en $n\in\{1,2,\ldots\}$ repeticiones de un procedimiento que en cada repetición solo arroja uno de dos resultados posibles, que denominaremos ``exito'' ($e$) y ``fracaso'' ($f$). La probabilidad de éxito en cada repetición es un valor constante $0<\theta<1,$ y el resultado de cualquier repetición no influye en las otras. En este caso, cualquier resultado de este experimento aleatorio consiste en una $n$-ada de éxitos y fracasos, por lo que el espacio muestral puede denotarse mediante: $$\Omega=\left\{\mathbf{\omega}=(\omega_1,\ldots,\omega_n)\,:\,\omega_j\in\{e,f\}\right\}.$$ Se trata de una espacio muestral finito donde $|\Omega|=2^n,$ pero no es en general equiprobable, salvo el caso particular $\theta=\frac{1}{2}.$ Por tratarse de un espacio muestral numerable, para definir la medida de probabilidad correspondiente $\prob:\mathfrak{F}\rightarrow[0,1]$ para cualquier $E\in\mathfrak{F},$ de acuerdo con (\ref{eq:pnumerable}) basta poder deducir la probabilidad correspondiente a los eventos simples, esto es $\prob(\{(\omega_1,\ldots,\omega_n)\}),$ con base en la descripción de este experimento aleatorio. Consideremos los eventos $\mathcal{E}_1,\ldots,\mathcal{E}_n$ definidos como: $$\mathcal{E}_k \,\equiv\,\text{``Se obtiene éxito en la $k$-ésima repetición''}\,,\quad k\in\{1,\ldots,n\},$$ los cuales quedan representados por los subconjuntos de $\Omega$ siguientes: 
+		\begin{align*}
+			E_1 \,=\, \left\{(e,\omega_2,\omega_3,\ldots,\omega_n)\,:\,\omega_j\in\{e,f\}\right\}, \\
+			E_2 \,=\, \left\{(\omega_1,e,\omega_3,\ldots,\omega_n)\,:\,\omega_j\in\{e,f\}\right\}, \\
+			\vdots \qquad\qquad\qquad\quad \vdots \qquad\qquad\qquad \vdots \qquad \\ 
+			E_n \,=\, \left\{(\omega_1,\ldots,\omega_{n-1},e)\,:\,\omega_j\in\{e,f\}\right\}. \\
+		\end{align*}
+		Cada uno de estos subconjuntos tiene $|E_k|=2^{n-1}$ elementos, por lo que con $n\geq 2$ no representan eventos simples, pero la descripción del experimento nos proporciona información sobre la probabilidad que les corresponde: $\prob(E_k)=\theta$ para todo $k\in\{1,\ldots,n\}.$ Más aún, notemos que cualquier evento simple puede expresarse en términos de una conjunción de los eventos $\mathcal{E}_1,\ldots,\mathcal{E}_n$ o algunas de sus negaciones. Por ejemplo, para un caso particular $n=5,$ el evento simple representado por $\{(e,f,e,e,f)\}$ es resultado de la siguiente conjunción de eventos: 
+		$$\mathcal{E}_1\wedge(\neg\,\mathcal{E}_2)\wedge\mathcal{E}_3\wedge\mathcal{E}_4\wedge(\neg\,\mathcal{E}_5) \,\longrightarrow\, E_1\cap(\Omega\setminus E_2)\cap E_3\cap E_4\cap(\Omega\setminus E_5) \,=\, \{(e,f,e,e,f)\},$$
+		y también por la descripción del experimento, en el sentido de que el resultado de cualquier repetición no influye en las otras repeticiones, esto implica la independencia de los eventos $\mathcal{E}_1,\ldots,\mathcal{E}_n$ y por tanto:
+		\begin{eqnarray*}
+			\prob(\{(e,f,e,e,f)\}) &=& \prob\left(E_1\cap(\Omega\setminus E_2)\cap E_3\cap E_4\cap(\Omega\setminus E_5)\right) \\
+			                       &=& \prob(E_1)\prob(\Omega\setminus E_2)\prob(E_3)\prob(E_4)\prob(\Omega\setminus E_5) \\ 
+			                       &=& \theta\cdot(1-\theta)\cdot\theta\cdot\theta\cdot(1-\theta) \,=\, \theta^{\hspace{0.3mm}3}(1-\theta)^2,
+		\end{eqnarray*}
+		y en general, para cualquier valor de $n$ la fórmula general para cualquier $n$-ada que representa un evento simple:
+		\begin{equation}\label{eq:probsimplebinom}
+			\prob\left(\{(\omega_1,\ldots,\omega_n)\}\right) \,=\, \theta^{\hspace{0.3mm}r}(1-\theta)^{n-r}\,, \qquad r = \sum_{j\,=\,1}^n\indic_{\{\omega_j\,=\,e\}}\,,
+		\end{equation}
+		donde $r$ representa el número de éxitos $(e)$ en la $n$-ada $(\omega_1,\ldots,\omega_n),$ y por tanto necesariamente $n-r$ es el número de fracasos $(f).$ Al tener una fórmula general (\ref{eq:probsimplebinom}) para los eventos simples en un espacio muestral numerable, la probabilidad de cualquier evento no simple se calcula mediante (\ref{eq:pnumerable}), y con esto el espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ para el experimento aleatorio binomial ha quedado especificado. \qed 
+	\end{ejem}
+	
+	Una vez especificado el espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ con base en la información que se tiene, en un momento dado, sobre un fenómeno o experimento aleatorio, es posible definir distintas funciones que cuantifiquen aspectos de interés. Se trata de funciones que tienen por dominio al espacio muestral $\Omega$ y por codominio al conjunto de los números reales $\Runo,$ y cuya regla de correspondencia se define de acuerdo con un interés específico. A estas funciones se les conoce como \textit{variables aleatorias}. En el caso del experimento aleatorio binomial, cuyo espacio de probabilidad se dedujo en el Ejemplo \ref{ej:experimBinomial}\,, podría ser de interés, por ejemplo, cuantificar el número de éxitos que se obtienen en las $n$ repeticiones, por medio de una función $X:\Omega\rightarrow\Runo$ definida como:
+	\begin{equation}\label{def:vaBinomial}
+		X\left((\omega_1,\ldots,\omega_n)\right) \,:=\, \sum_{j\,=\,1}^n\indic_{\{\omega_j\,=\,e\}},
+	\end{equation}
+	o bien una variable aleatoria $Y:\Omega\rightarrow\Runo$ que reporte el valor $1$ si el resultado de las $n$ repeticiones fue siempre el mismo, y $0$ en caso contrario:
+	\begin{equation}\label{def:vaBinomial2}
+		Y\left((\omega_1,\ldots,\omega_n)\right) \,:=\, \indic_{\{\omega_1\,=\,\omega_2\,=\,\ldots\,=\,\omega_n\}}.
+	\end{equation}
+	
+	\medskip 
+	
+	Una vez definida una variable aleatoria $X$ sobre un espacio de probabilidad $(\Omega,\mathfrak{F},\prob),$ dado que existe incertidumbre sobre el resultado $\omega\in\Omega$ que se puede observar, esto se traduce en incertidumbre también sobre el número real $X(\omega)$ que puede reportar la variable aleatoria $X,$ y por tanto interesa hacer cálculo de probabilidades sobre los valores que pueda reportar dicha variable aleatoria, ya sea en relación con un valor específico o bien sobre un conjunto de valores. Esto es, calcular la probabilidad de que $X(\omega)=x$ para un valor específico $x,$ o bien la probabilidad de que $X(\omega)\in B$ para algún subconjunto $B\subseteq\Runo.$ 
+	
+	\bigskip 
+	
+	\begin{defi}\label{def:variablealeat}
+		Dado un espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ una \textbf{variable aleatoria} es una función $X:\Omega\rightarrow\Runo$ tal que para casi cualquier  $B\subseteq\Runo$ la imagen inversa $X^{(-1)}(B)=\{\omega\in\Omega:X(\omega)\in B\}$ representa a algún evento, es decir tal que $X^{(-1)}(B)\in\mathfrak{F}.$ \qed 
+	\end{defi}
+	
+	El uso de la expresión \textit{casi cualquier $B\subseteq\Runo$} se refiere a que existen subconjuntos de $\Runo$ cuya imagen inversa no representa evento alguno, en \textit{teoría de la medida} se les conoce como subconjuntos \textit{no medibles}, probabilísticamente hablando en este caso particular. No abundaremos más en ello porque eso está más allá del objetivo del presente texto, así que de momento nos restringiremos a aquellos subconjuntos de $\Runo$ que sí son probabilísticamente medibles, colección que se conoce como $\sigma$-álgebra de Borel\,\footnote{Émile Borel (1871--1956) matemático y político francés.} $\mathfrak{B}(\Runo),$ y a cuyos elementos se les conoce como \textit{conjuntos borelianos}, que para efectos prácticos resulta más que suficiente para el cálculo de probabilidades que abordaremos.
+	
+	\medskip 
+	
+	Al definir una variable aleatoria $X$ sobre un espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ se crea un nuevo espacio de probabilidad $(\Runo, \mathfrak{B}(\Runo),\prob_X)$ donde $\prob_X:\mathfrak{B}(\Runo)\rightarrow[0,1]$ es la \textit{medida de probabilidad inducida} por la variable aleatoria $X,$ de modo que para cualquier $B\in\mathfrak{B}(\Runo)$ el número real $\prob_X(B)$ represente justamente la probabilidad de que la variable aleatoria $X$ reporte un número real $X(\omega)$ que pertenezca a $B.$ Esto último ocurrirá si el resultado del fenómeno o experimento aleatorio es alguno de los elementos del subconjunto $\{\omega\in\Omega\,:\,X(\omega)\in B\}=X^{(-1)}(B)\in\mathfrak{F},$ que al representar un evento es posible calcular su probabilidad mediante $\prob,$ es decir:
+	\begin{equation}\label{eq:medidainducida}
+		\prob_X(B) \,=\, \prob(X^{(-1)}(B)) = \prob\left(\{\omega\in\Omega\,:\,X(\omega)\in B\}\right).
+	\end{equation}
+	En lugar de escribir $\prob\left(\{\omega\in\Omega\,:\,X(\omega)\in B\}\right)$ algunos autores acostumbran escribir simplemente $\prob(X\in B).$ Se deja como ejercicio demostrar que $\prob_X$ cumple con la Definición \ref{def:medidaprob} con $\Omega=\Runo.$
+	
+	\bigskip 
+	
+	\begin{ejem}\label{ej:vaBinomial}
+		\textbf{Variable aleatoria binomial.} Continuando con el experimento aleatorio binomial, cuyo espacio de probabilidad fue obtenido en el Ejemplo\ \ref{ej:experimBinomial}\,, consideremos la variable aleatoria $X:\Omega\rightarrow\Runo$ definida en (\ref{def:vaBinomial}) que reporta el número de éxitos obtenido en las $n$ repeticiones. Esto implica que el conjunto de valores distintos que puede reportar es el rango de dicha función, es decir:
+		$$\text{Ran}\,X \,=\, \{X(\omega)\,:\,\omega\in\Omega\} \,=\, \{0,1,\ldots,n\}.$$
+		Entonces para cualquier $x\in\{0,1,\ldots,n\}$ la probabilidad de que la variable aleatoria $X$ reporte el valor $X(\omega)=x$ se puede calcular mediante (\ref{eq:medidainducida}) con $B=\{x\}.$ Obtengamos primero su imagen inversa, que denotaremos:
+		\begin{equation*}
+			E_x \,:=\, X^{(-1)}(\{x\}) \,=\, \bigg\{(\omega_1,\ldots,\omega_n)\in\Omega\,:\,\sum_{j\,=\,1}^n\indic_{\{\omega_j\,=\,e}\}=x\bigg\}.
+		\end{equation*}
+		Notemos que todos los elementos $(\omega_1,\ldots,\omega_n)\in E_x$ son $n$-adas con exactamente $x$ éxitos, y por tanto $n-x$ fracasos, así que aplicando (\ref{eq:probsimplebinom}) obtenemos que $\prob(\{(\omega_1,\ldots,\omega_n)\})=\theta^{\hspace{0.3mm}x}(1-\theta)^{n-x}$ para todo $(\omega_1,\ldots,\omega_n)\in E_x,$ y aplicando (\ref{eq:pnumerable}) obtenemos:
+		\begin{equation*}
+			\prob_X(\{x\}) \,=\, \prob(E_x) \,=\, \sum_{(\omega_1,\ldots,\omega_n)\,\in\,E_x}\!\!\!\!\prob(\{(\omega_1,\ldots,\omega_n)\}) \,=\, |E_x|\theta^{\hspace{0.3mm}x}(1-\theta)^{n-x},
+		\end{equation*}
+		donde $|E_x|$ es el número de formas distintas en las que podemos acomodar $x$ éxitos en los $n$ lugares de cualquier $n$-ada $(\omega_1,\ldots,\omega_n)\in E_x$ (los lugares restantes son automáticamente para los $n-x$ fracasos), y esto es justamente el número de combinaciones de $n$ en $x,$ denotado por el coeficiente binomial $\binom{n}{x}=\frac{n!}{x!(n-x)!},$ con lo que concluimos que la fórmula general para calcular la probabilidad de que la variable aleatoria $X$ reporte exactamente $x$ éxitos en $n$ repeticiones, para cualquier $x\in\{0,1,\ldots,n\},$ es la siguiente:
+		\begin{equation}\label{eq:fmpBinomial}
+			\prob_X(\{x\}) \,\equiv\, \prob(X=x) \,=\, \binom{n}{x}\theta^{\hspace{0.3mm}x}(1-\theta)^{n-x}\indic_{\{0,1,\ldots,n\}}(x).
+		\end{equation}
+		Implícitamente $\prob(X=x)=0$ para toda $x\notin\{0,1,\ldots,n\}$ por lo que para cualquier boreliano $B\in\mathfrak{B}(\Runo)$ tenemos que:
+		\begin{equation}\label{eq:probBinomial}
+			\prob(X\in B) \,\equiv\, \prob_X(B) \,=\, \prob_X(B\cap\{0,1,\ldots,n\}) \,=\, \sum_{x\,=\,0}^n\prob(X=x)\indic_{\{x\,\in\,B\}}\,.
+		\end{equation} \qed 
+	\end{ejem}
+	
+	El cálculo de probabilidades con variables aleatorias $\prob(X\in B)\equiv\prob_X(B)$ más frecuente es aquél en el que $B$ representa un intervalo en $\Runo,$ que de forma general podríamos denotar como $B=|a,b|$ donde $-\infty<a\leq b< +\infty,$ y donde el símbolo $|$ puede denotar abierto o cerrado. Por ejemplo, los intervalos acotados $[a,b],$ $]a,b[,$ $]a,b],$ $[a,b[,$ $[a,a]=\{a\},$ $]a,a[\,=\varnothing,$ o bien intervalos no acotados como $]-\infty,b],$ $]-\infty,b[,$ $[a,+\infty[,$ $]a,+\infty[,$ $]-\infty,+\infty[\,=\Runo.$ Teniendo resuelto cómo calcular probabilidades de que una variable aleatoria $X$ reporte un valor que pertenezca a este tipo de intervalos, el cálculo de probabilidades para uniones disjuntas numerables de intervalos es inmediato a partir de la Definición \ref{def:medidaprob}\,, esto es, si $I_1,I_2,\ldots$ son intervalos en $\Runo$ tales que $I_j\cap I_k=\varnothing$ para todo $j\neq k$ entonces:
+	\begin{equation}\label{eq:uniondisjint}
+	\prob\bigg(X\in\bigcup_{n\,\geq\,1}I_n\bigg) \,\equiv\, \prob_X\bigg(\bigcup_{n\,\geq\,1}I_n\bigg) \,=\, \sum_{n\,\geq\,1}\prob_X(I_n) \,\equiv\, \sum_{n\,\geq\,1}\prob(X\in I_n).
+	\end{equation}
+	
+	\medskip 
+	
+	Todos los tipos de intervalos mencionados en el párrafo anterior pueden obtenerse mediante una cantidad numerable de operaciones de conjuntos de un solo tipo de intervalo, por ejemplo los intervalos del tipo $]-\infty,x]$ donde $x\in\Runo.$ Por ejemplo, $]a,b]=\,]-\infty,b]\,\setminus\,]-\infty,a]$ y por lo tanto aplicando propiedades de las medidas de probabilidad según la Definición \ref{def:medidaprob}\, y la Proposición \ref{prop:medidasprob}\, y lo que de ellas se puede derivar, obtenemos:
+	\begin{equation}\label{eq:intsemiabierto}
+	   \prob(X\in\,]a,b]\,) \,\equiv\, \prob_X(\,]a,b]\,) \,=\, \prob_X(\,]-\infty,b]\,\setminus\,]-\infty,a]\,) \,=\, \prob_X(\,]-\infty,b]\,) - \prob_X(\,]-\infty,a]\,).
+	\end{equation}
+	La demostración de los otros casos queda como ejercicio. La relevancia de lo anterior es que entonces basta saber calcular $\prob_X(\,]-\infty,x]\,)$ para cualquier $x\in\Runo$ y con ello será posible calcular la probabilidad de que la variable aleatoria $X$ reporte un valor $X(\omega)$ que pertenezca a cualquier otro tipo de intervalo. Esto motiva la siguiente:
+	
+	\bigskip 
+	
+	\begin{defi}\label{def:Fndistrib}
+		La \textbf{función de distribución de probabilidades} de una variable aleatoria $X$ es una función $F_X:\Runo\rightarrow[0,1]$ definida como:
+		$$F_X(x) \,:=\, \prob_X(\,]-\infty,x\,]\,) \,\equiv\, \prob(X\leq x).$$ \qed 
+	\end{defi}
+	
+	Consecuencia de la definición anterior, y de las propiedades de la medida de probabilidad $P_X$ inducida por una variable aleatoria $X$, se obtiene el siguiente teorema, cuya demostración se deja como ejercicio:
+	
+	\bigskip 
+	
+	\begin{teo}\label{teo:Fdist}
+		Sea $F_X$ una función de distribución de probabilidades de una variable aleatoria $X.$
+		\begin{itemize}
+			\item[a)] $F_X$ es una función monótona creciente, esto es que si $x_1<x_2$ entonces $F_X(x_1)\leq F_X(x_2).$
+			\item[b)] $F_X$ es continua por la derecha, es decir que $\lim_{\delta\,\rightarrow\,0+}F_X(x+\delta)=F_X(x).$
+			\item[c)] $F_X(+\infty) \equiv \lim_{x\,\rightarrow\,+\infty}F_X(x) = 1.$
+			\item[d)] $F_X(-\infty) \equiv \lim_{x\,\rightarrow\,-\infty}F_X(x) = 0.$
+			\item[e)] $\prob(a<X\leq b)=F_X(b)-F_X(a).$
+			\item[f)] $\prob(X<a)=F_X(a-)\equiv\lim_{x\,\rightarrow\,a-}F_X(x).$
+			\item[g)] $\prob(a\leq X\leq b)=F_X(b)-F_X(a-).$
+			\item[h)] $\prob(X > b)=1-F_X(b).$
+			\item[i)] $\prob(X \geq b)=1-F_X(b-).$
+			\item[j)] $\prob(a<X<b)=F_X(b-)-F_X(a).$
+			\item[k)] $\prob(a\leq X<b)=F_X(b-)-F_X(a-).$
+			\item[l)] $\prob(X=x)=F_X(x)-F_X(x-).$
+		\end{itemize} \qed 
+	\end{teo}
+	
+	De hecho, si $F:\Runo\rightarrow[0,1]$ es cualquier función que satisface las propiedades a), b), c) y d) del Teorema \ref{teo:Fdist}\,, se puede demostrar que siempre existe una variable aleatoria que tiene a $F$ como función de distribución de probabilidades, y los incisos e) a l) son consecuencia de los cuatro primeros, demostración que puede consultarse en la referencia \cite{Domínguez}.
+
+    \bigskip 
+	
+	A las variables aleatorias se les puede clasificar en tres categorías, dependiendo de algunas propiedades particulares adicionales de sus funciones de distribución de probabilidades. Una primera categoría corresponde al caso en que $\prob(X=x)=0$ para todo valor $x\in\Runo,$ lo cual implicaría que $F_X$ es continua también por la izquierda, y por tanto continua en todo $\Runo,$ veáse la Figura \ref{fig:Fdistrib}a, razón por la cual en este caso particular se dice que $X$ es una \textbf{variable aleatoria continua}. Consecuencia inmediata de lo anterior:
+	\begin{align}\label{eq:vacontinua}
+		\prob(a<X<b) \,=\, \prob(a\leq X\leq b) \,=\, \prob(a<X\leq b) \,=\, \prob(a\leq X<b), \\
+		\prob(X>b) \,=\,\prob(X \geq b)\,,\qquad \prob(X<a)\,=\,\prob(X\leq a).
+	\end{align}
+
+    \bigskip
+
+    \begin{figure}[ht]
+	\begin{center} 
+		\includegraphics[width=15cm, keepaspectratio]{figura01.pdf}
+	\end{center}
+	\caption{Tipos de funciones de distribución de probabilidades: a) continua, b) discreta, c) mixta.}
+	\label{fig:Fdistrib}
+     \end{figure}
+
+	\bigskip 
+	
+	\begin{defi}\label{def:vaabscont}
+		Sea $|a,b|$ un intervalo cualquiera, abierto, cerrado o semi abierto, acotado o no, es decir $-\infty\leq a\leq b\leq+\infty.$ Se dice que $X$ es una \textbf{variable aleatoria absolutamente continua} si existe una función integrable $f_X:\Runo\rightarrow[0,+\infty[\,$ tal que:
+		$$\prob(\,X\in|a,b|\,) \,=\, \int_{a}^{\hspace{0.25mm}b}\!\!f_X(x)dx\,,$$
+		y a la función $f_X$ se le denomina \textbf{función de densidad de probabilidades}. \qed 
+	\end{defi}
+	
+	Consecuencia inmediata de las Definiciones \ref{def:Fndistrib}\, y \ref{def:vaabscont}\,, en el caso de que $X$ sea una variable aleatoria absolutamente continua se deduce la siguiente relación entre su función de distribución de probabilidades $F_X$ y su función de densidad de probabilidades $f_X:$
+	\begin{equation}\label{eq:fdp}
+		F_X(x) \,=\, \prob(X\leq x) \,=\, \prob(\,X\in\,]-\infty,x]\,) \,=\, \int_{\!-\infty}^{\hspace{0.25mm}x}\!\!f_X(t)dt\,,\qquad\text{para todo valor } x \in\Runo,
+	\end{equation}
+	y como $F_X(+\infty)=1$ esto implica que necesariamente $\int_{-\infty}^{+\infty}f_X(x)dx=1.$ Más aún, en este caso $F_X$ no solo es continua sino que además, como consecuencia del \textit{Teorema Fundamental del Cálculo,} $F_X$ es derivable en cada punto $x\in\Runo$ donde $f_X$ sea continua, y en tales casos:
+	\begin{equation}\label{eq:fdp2}
+		\frac{d}{dx}\,F_X(x) \,=\, f_X(x)\,.
+	\end{equation}
+	
+	\bigskip 
+	
+	\begin{ejem}\label{ej:vauniforme}
+		\textbf{Variable aleatoria continua uniforme.} Sea $X$ una variable aleatoria absolutamente continua con $\text{Ran}\,X=|a,b|$ un intervalo acotado y tal que subintervalos de $|a,b|$ de igual longitud tengan la misma probabilidad, es decir, para cualesquiera números reales $c$ y $d$ tales que $a<c<d<d+h<b$ con $h>0,$ se cumple que: $$\prob(X\in|c,c+h|) \,=\, \prob(X\in|d,d+h|),$$ y por lo tanto: $$\frac{F_X(c+h)-F_X(c)}{h} \,=\, \frac{F_X(d+h)-F_X(d)}{h}\,,$$
+		en donde calculando límites cuando $h\rightarrow 0+$ se obtiene que $f_X(c)=f_X(d),$ lo que implica que $f_X$ es una función constante sobre el intervalo $|a,b|.$ Sea $k>0$ dicha constante, cuyo valor se deduce a partir de lo siguiente:
+		$$1 \,=\, \int_{-\infty}^{+\infty}f_X(x)dx \,=\, \int_{a}^{b}kdx \,=\, (b-a)k\,,$$
+		es decir que $k=\frac{1}{b-a}\,,$ por lo que la función de densidad de probabilidades resulta ser: $$f_X(x) \,=\, \frac{1}{b-a}\,\indic_{\{x\,\in\,|a,b|\}}\,,$$
+		y su función de distribución de probabilidades: 
+		$$F_X(x) \,=\, \int_{-\infty}^{x}f_X(t)dt \,=\, \begin{cases}
+														 	0\,, & \text{ si } x \leq a, \\
+														 	\frac{x-a}{b-a} \,, & \text{ si } a<x<b, \\
+														 	1\,, & \text{ si } x \geq b.
+		                                                \end{cases} $$
+		Nótese que $F_X$ es continua en todo $\Runo$ y derivable en cualquier punto excepto en $x=a$ y en $x=b,$ ya que en dichos puntos $f_X$ es discontinua. \qed 
+	\end{ejem}
+
+	\medskip 
+
+	En caso de exista al menos un punto $x_0$ tal que $F_X(x_0-)\neq F_X(x_0),$ además de ser un punto de discontinuidad de $F_X,$ también como consecuencia de los inicisos a) y l) del Teorema \ref{teo:Fdist} se obtiene que $P(X=x_0)>0.$ Una segunda categoría de variables aleatorias es aquella en la que una variable aleatoria $X$ solo puede reportar una cantidad numerable de valores distintos, esto es $\text{Ran}\,X=\{x_1,x_2,\ldots\},$ en cuyo caso se trata de una \textbf{variable aleatoria discreta}. Como:
+	\begin{equation*}
+		\Omega \,=\, X^{(-1)}\big(\text{Ran}\,X\big) \,=\, \bigcup_{n\,\geq\,1}X^{(-1)}\big(\{x_n\}\big)
+	\end{equation*}
+	donde la unión es disjunta, entonces:
+	\begin{equation*}
+		1 \,=\, \prob(\Omega) \,=\, \sum_{n\,\geq\,1}\prob\big(X^{(-1)}(\{x_n\})\big) \,\equiv\, \sum_{n\,\geq\,1}\prob(X=x_n).
+	\end{equation*}
+	Lo anterior implica que en el caso de una variable aleatoria discreta $X$ basta saber calcular $\prob(X=x)>0$ para cada $x\in\text{Ran}\,X=\{x_1,x_2,\ldots\},$ porque para cualquier conjunto boreliano $B\in\mathfrak{B}(\Runo)$ tenemos que:
+	\begin{equation}\label{eq:fmp}
+		\prob(X\in B) \,\equiv\, \prob_X(B) \,=\, \prob_X(B\cap\{x_1,x_2,\ldots\}) \,=\, \sum_{n\,\geq 1}\prob(X=x_n)\indic_{\{x_n\,\in\,B\}} 
+	\end{equation}
+	lo cual motiva la siguiente:
+	
+	\bigskip 
+	
+	\begin{defi}\label{def:fmp}
+		La \textbf{función de masa de probabilidades} de una variable aleatoria discreta $X$ es una función $p_X:\Runo\rightarrow[0,1]$ definida como:
+		$$p_X(x) \,:=\, \prob(X=x)$$
+		y donde $p_X(x)>0$ si y solo si $x\in\text{Ran}\,X=\{x_1,x_2,\ldots\}.$ \qed 
+	\end{defi}
+	De la definición anterior tenemos entonces que, en general, para cualquier conjunto boreliano $B\in\mathfrak{B}(\Runo)$ el cálculo de probabilidades con una variable aleatoria discreta es:
+	\begin{equation}\label{eq:fmp2}
+		\prob(X\in B) \,=\, \sum_{x\,\in\,B}p_X(x)\,,
+	\end{equation}
+	y en particular, si $B=\,]-\infty,t\,]$ para algún $t\in\Runo$ entonces:
+	\begin{equation}\label{eq:fmp3}
+		F_X(t) \,=\, \sum_{x\,:\,x\,\leq\,t}p_X(x)\,.
+	\end{equation}
+	Nótese que la función de distribución de probabilidades $F_X:\Runo\rightarrow[0,1]$ de una variable aleatoria discreta es una \textit{función escalonada}, esto es, que siempre es constante por intervalos, y con saltos en cada valor $x\in\text{Ran}\,X=\{x_1,x_2,\ldots\},$ veáse la Figura \ref{fig:Fdistrib}b. El Ejemplo \ref{ej:vaBinomial} es un caso de variable aleatoria discreta, cuya función de masa de probabilidades está dada por (\ref{eq:fmpBinomial})\,.
+	
+	\bigskip 
+	
+	La tercera y última categoría a considerar es el caso la \textbf{variable aleatoria mixta}, que debe su nombre al hecho de que mezcla el comportamiento de una variable aleatoria discreta y una variable aleatoria continua. Esto es, su función de distribución de probabilidades no es continua pero tampoco es siempre constante por intervalos, véase por ejemplo la Figura \ref{fig:Fdistrib}c. Primero recordemos el siguiente resultado, cuya demostración se deja como ejercicio:
+	
+	\medskip
+	
+	\begin{prop}\label{prop:convexa}
+		Sean $F_1$ y $F_2$ dos funciones de distribución de probabilidades cualesquiera. Si para cualquier número real $0\leq\alpha\leq 1$ se define una función $F:\Runo\rightarrow[0,1]$ como la combinación lineal convexa de $F_1$ y $F_2,$ esto es: $$F(x) \,:=\, (1-\alpha)F_1(x) \,+\, \alpha F_2(x)\,,$$ entonces $F$ cumple las propiedades de una función de distribución de probabilidades como en el Teorema \ref{teo:Fdist}\,. \qed
+	\end{prop} 
+	
+	El siguiente \textit{teorema de descomposición} para variables aleatorias demuestra que la función de distribución de probabilidades de cualquier tipo de variable aleatoria siempre puede expresarse (descomponerse) como combinación lineal convexa de una función de distribución de probabilidades discreta y otra continua: 
+	
+	\medskip 
+	
+	\begin{teo}\label{teo:descomp}
+		Sea $X$ una variable aleatoria y $F_X$ su función de distribución de probabilidades. Entonces existen un número real $0\leq\alpha\leq 1,$ una función de distribución de probabilidades discreta $F_D$ y una función de distribución de probabilidades continua $F_C$ tales que:
+		$$F_X(x) \,=\, (1-\alpha)F_D(x) \,+\, \alpha F_C(x)\,.$$ \qed 
+	\end{teo} 
+	La demostración del teorema anterior puede consultarse, por ejemplo, en la referencia \cite{Domínguez}. 
+	
+	
+	
+	%% Actividad de inducción: ejercicios de repaso/reforzamiento de Probabilidad I
+	
+		
+
+\newpage 
+\section{Distribución conjunta y marginales}\label{sec:conjuntamarginales}
+	
+El concepto de variable aleatoria se generaliza al de \textit{vector aleatorio} definiendo funciones que tienen por dominio al espacio muestral $\Omega$ y por codominio al conjunto $\Runo^n$ para cualquier entero positivo $n\geq 2.$ 
+    
+\bigskip
+
+\begin{defi}\label{def:vectoraleat}
+Dado un espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ un \textbf{vector aleatorio} es una función $\mathbf{X}:\Omega\rightarrow\Runo^n$ tal que para casi cualquier  $B\subseteq\Runo^n$ la imagen inversa $\mathbf{X}^{(-1)}(B)=\{\omega\in\Omega:\mathbf{X}(\omega)\in B\}$ representa a algún evento, es decir tal que $\mathbf{X}^{(-1)}(B)\in\mathfrak{F}.$ \qed
+\end{defi}
+
+El uso de la expresión \textit{casi cualquier $B\subseteq\Runo^n$} es análogo a lo explicado respecto a la Definición \ref{def:variablealeat}.
+	
+\medskip 
+	
+Al definir un vector aleatorio $\mathbf{X}$ sobre un espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ se crea un nuevo espacio de probabilidad $(\Runo^n,\mathfrak{B}(\Runo^n),\prob_{\mathbf{X}})$ donde $\prob_{\mathbf{X}}:\mathfrak{B}(\Runo^n)\rightarrow[0,1]$ es la \textit{medida de probabilidad inducida} por el vector aleatorio $\mathbf{X},$ de modo que para cualquier $B\in\mathfrak{B}(\Runo^n)$ el número real $\prob_{\mathbf{X}}(B)$ represente justamente la probabilidad de que el vector aleatorio $\mathbf{X}$ reporte un punto en $\Runo^n$ que pertenezca a $B.$ Esto último ocurrirá si el resultado del fenómeno o experimento aleatorio es alguno de los elementos del subconjunto $\{\omega\in\Omega\,:\,\mathbf{X}(\omega)\in B\}=\mathbf{X}^{(-1)}(B)\in\mathfrak{F},$ que al representar un evento es posible calcular su probabilidad mediante $\prob,$ es decir:
+	\begin{equation}\label{eq:medidainducida2}
+		\prob_{\mathbf{X}}(B) \,=\, \prob(\mathbf{X}^{(-1)}(B)) = \prob\left(\{\omega\in\Omega\,:\,\mathbf{X}(\omega)\in B\}\right).
+	\end{equation}
+En lugar de escribir $\prob\left(\{\omega\in\Omega\,:\,\mathbf{X}(\omega)\in B\}\right)$ algunos autores acostumbran escribir simplemente $\prob(\mathbf{X}\in B).$ Se deja como ejercicio demostrar que $\prob_{\mathbf{X}}$ cumple con la Definición \ref{def:medidaprob} con $\Omega=\Runo^n.$
+
+\bigskip 
+
+Para cada $\omega\in\Omega$ tenemos que $\mathbf{X}(\omega)$ es un punto en $\Runo^n$ y por tanto existen $n$ números reales tales que $\mathbf{X}(\omega)=(x_1,\ldots,x_n).$ Más aún, al tratarse de una función $\mathbf{X}:\Omega\rightarrow\Runo^n$ existen $n$ funciones componentes $X_1,\ldots,X_n$ tales que $X_j:\Omega\rightarrow\Runo$ para $j\in\{1,\ldots,n\}$ de modo que:
+\begin{equation}\label{eq:fcomponentes}
+    \mathbf{X}(\omega) \,=\, \big(X_1(\omega),\ldots,X_n(\omega)\big).
+\end{equation}
+La demostración de lo siguiente se deja como ejercicio: 
+
+\bigskip 
+
+\begin{prop}\label{prop:fcomponentes}
+    Sea $(\Omega,\mathfrak{F},\prob)$ un espacio de probabilidad. Una función $\mathbf{X}:\Omega\rightarrow\Runo^n$ es vector aleatorio si y solo si cada una de sus funciones componentes (\ref{eq:fcomponentes}) son variables aleatorias. \qed 
+\end{prop}
+    
+Así como cualquier subconjunto $B\in\mathfrak{B}(\Runo)$ puede obtenerse en términos de una cantidad numerable de operaciones de conjuntos con intervalos de la forma $\,]-\infty,x],$ de forma análoga cualquier subconjunto $B\in\mathfrak{B}(\Runo^n)$ con $n\geq 2$ puede obtenerse en términos de una cantidad numerable de operaciones de conjuntos con productos cartesianos de intervalos de la forma $\,]-\infty,x]$ también, es decir con subconjuntos de la clase:
+\begin{equation}\label{eq:claseJn}
+    \mathfrak{J}^n \,:=\, \{\,]-\infty,x_1]\times\cdots\times\,]-\infty,x_n]:(x_1,\ldots,x_n)\in\Runo^n\},
+\end{equation}
+lo que implica que para definir la medida de probabilidad $\prob_{\mathbf{X}}$ inducida por un vector aleatorio $\mathbf{X}=(X_1,\ldots,X_n)$ basta que dicha medida esté definida sobre la clase $\mathfrak{J}^n,$ es decir poder calcular para cualquier $(x_1,\ldots,x_n)\in\Runo^n:$
+\begin{eqnarray}\label{eq:medidainducidaRn}
+    \prob_{\mathbf{X}}(\,]-\infty,x_1]\times\cdots\times\,]-\infty,x_n]) &=& \prob\big(\mathbf{X}^{(-1)}(\,]-\infty,x_1]\times\cdots\times\,]-\infty,x_n])\big) \nonumber \\ 
+    &=& \prob\Big(\big\{\omega\in\Omega:\big(X_1(\omega),\ldots,X_n(\omega)\big)\in\,\,]-\infty,x_1]\times\cdots\times\,]-\infty,x_n]\big\}\Big) \nonumber \\ 
+    &=& \prob\Big( \big\{ \omega\in\Omega:X_1(\omega)\leq x_1 \wedge \cdots \wedge X_n(\omega)\leq x_n \big\} \Big) \nonumber \\ 
+    &=& \prob\Big( \big\{\omega\in\Omega:X_1(\omega)\leq x_1\big\}\,\cap\,\cdots\,\cap\, \big\{\omega\in\Omega:X_n(\omega)\leq x_n\big\} \Big)
+\end{eqnarray}
+en donde es costumbre escribir (\ref{eq:medidainducidaRn}) de forma simplificada como $\prob(X_1\leq x_1,\ldots,X_n\leq x_n),$ lo cual motiva la siguiente definición, que resulta análoga a la Definición \ref{def:Fndistrib}:
+
+\bigskip 
+
+\begin{defi}\label{def:FndistribRn}
+    La \textbf{función de distribución conjunta de probabilidades} de un vector aleatorio $\mathbf{X}=(X_1,\ldots,X_n)$ es una función $F_{\mathbf{X}}:\Runo^n\rightarrow[0,1]$ definida como:
+    \begin{equation*}
+        F_{\mathbf{X}}(x_1,\ldots,x_n) \,:=\, \prob(X_1\leq x_1,\ldots,X_n\leq x_n).
+    \end{equation*} \qed 
+\end{defi}
+
+% Marginalizar la F conjunta 
+A partir de la función de distribución conjunta de probabilidades $F_{\mathbf{X}}$ de un vector aleatorio de probabilidades $\mathbf{X}=(X_1,\ldots,X_n)$ es posible deducir las funciones de distribución de probabilidades individuales $F_{X_j}$ de cada una de las $j\in\{1,\ldots,n\}$ variables aleatorias componentes. A cada $F_{X_j}$ se le denomina \textit{función de distribución marginal} y al procedimiento para deducirla a partir de la función de distribución conjunta $F_{\mathbf{X}}$ se le denomina \textit{marginalización}:
+\begin{eqnarray*}
+    F_{X_j}(x_j) &=& \prob(X_j\leq x_j) = \prob(\{\omega\in\Omega:X_j(\omega)\leq x_j\}) \\
+                 &=& \prob(D_1 \cap \cdots \cap D_{j-1} \cap \{\omega\in\Omega:X_j(\omega)\leq x_j\} \cap D_{j+1} \cap \cdots \cap D_n)
+\end{eqnarray*}
+donde $D_k=\{\omega\in\Omega:X_k(\omega)\leq +\infty\}=\Omega$ para $k\neq j$ y por lo tanto:
+\begin{equation}\label{eq:marginalizar} 
+    F_{X_j}(x_j) \,=\, F_{\mathbf{X}}(+\infty,\ldots,+\infty,x_j,+\infty,\ldots,+\infty).
+\end{equation}
+    
+\medskip
+
+Sin embargo, a partir de las funciones de distribución marginales $F_{X_1},\ldots,F_{X_n}$ no es posible deducir la función de distribución conjunta del vector aleatorio $\mathbf{X}=(X_1,\ldots,X_n)$ ya que pueden existir distintas funciones de distribución conjunta que tengan esas mismas funciones de distribución marginales, como se ilustra en el siguiente:
+
+\bigskip
+
+\begin{ejem}\label{ej:maginalesiguales}
+    Considérese el caso $n=2,$ primero un vector aleatorio $\mathbf{X}=(X_1,X_2)$ donde $X_1$ es una variable aleatoria continua uniforme, véase el Ejemplo \ref{ej:vauniforme}, sobre el intervalo abierto $\,]0,1[\,,$ y sea la variable aleatoria $X_2=X_1,$ lo que implica que las funciones de distribución marginales son iguales, y dadas por $F_{X_1}(x)=F_{X_2}(x)=F(x)=x\indic_{\{0\,<\,x\,<\,1\}}+\indic_{\{x\,\geq\,1\}}.$ En cuanto a su función de distribución conjunta:
+    \begin{eqnarray*}
+        F_{\mathbf{X}}(x_1,x_2) &=& \prob(X_1\leq x_1,X_2\leq x_2) = \prob(X_1\leq x_1,X_1\leq x_2) = \prob(X_1\leq\min\{x_1,x_2\}), \\
+                                &=& F(\min\{x_1,x_2\}) = F(x_1)\indic_{\{x_1\,\leq\,x_2\}} + F(x_2)\indic_{\{x_1\,>\,x_2\}} = \min\{F(x_1),F(x_2)\}.
+    \end{eqnarray*}
+    Por otro lado, consideremos ahora el vector aleatorio $\mathbf{Y}=(Y_1,Y_2)$ donde $Y_1$ es una variable aleatoria continua uniforme sobre el intervalo abierto $\,]0,1[\,,$ y donde $Y_2=1-Y_1.$ Es inmediato verificar que $Y_2$ resulta ser también una variable aleatoria continua uniforme sobre el intervalo abierto $\,]0,1[\,,$ lo que implica que las funciones de distribución marginales son iguales, y dadas por $F_{Y_1}(y)=F_{Y_2}(y)=F(y)=y\indic_{\{0\,<\,y\,<\,1\}}+\indic_{\{y\,\geq\,1\}}.$ En cuanto a su función de distribución conjunta:
+    \begin{eqnarray*}
+        F_{\mathbf{Y}}(y_1,y_2) &=& \prob(Y_1\leq y_1,Y_2\leq y_2) = \prob(Y_1\leq y_1,1-Y_1\leq y_2) = \prob(1-y_2\leq Y_1\leq y_1), \\
+                                &=& [F(y_1)-F(1-y_2)]\indic_{\{1-y_2\,<\,y_1\}} = \max\{F(y_1)+F(y_2)-1,0\}.
+    \end{eqnarray*}
+    Tenemos entonces dos vectores aleatorios $\mathbf{X}=(X_1,X_2)$ e $\mathbf{Y}=(Y_1,Y_2)$ cuyas funciones de distribución marginales son iguales, pero con funciones de distribución conjunta diferentes ya que $F_{\mathbf{X}}\neq F_{\mathbf{Y}}.$ \qed
+\end{ejem}
+
+
+\medskip
+
+En el caso de una variable aleatoria $X,$ por medio de su función de distribución de probabilidades $F_X(x)=\prob(X\leq x)$ es relativamente accesible hacer cálculo de probabilidades sobre cualquier tipo de intervalo en $\Runo,$ como consecuencia del Teorema \ref{teo:Fdist}. Pero en el caso de un vector aleatorio $\mathbf{X}=(X_1,\ldots,X_n)$ con $n\geq 2,$ reexpresar un subconjunto de interés $B\in\mathfrak{B}(\Runo^n)$ por medio de operaciones de conjuntos de la clase $\mathfrak{J}^n$ es, por lo general, demasiado complejo y hasta inaccesible en términos prácticos, lo que dificulta el cálculo de probabilidades por medio de su función de distribución conjunta, salvo en el caso muy particular de que $B$ sea un producto cartesiano de intervalos semiabiertos de la forma $\,]a,b].$ Por ejemplo, en el caso $n=2$ se tendría:
+\begin{equation}\label{eq:probRectangulo}
+    \prob(a_1<X_1\leq b_1\,,\,a_2<X_2\leq b_2) = F_{X_1,X_2}(b_1,b_2) - F_{X_1,X_2}(b_1,a_2) - F_{X_1,X_2}(a_1,b_2) + F_{X_1,X_2}(a_1,a_2).
+\end{equation}
+
+\bigskip 
+
+Por simplicidad de notación, a partir de este momento nos restringiremos al caso de vectores aleatorios bivariados, y utilizaremos la notación $(X,Y)$ para el vector aleatorio, y $F_{X,Y}$ para su función de distribución conjunta (bivariada), pero los conceptos y resultados que se abordarán son fácilmente extendibles a dimensiones mayores que $n=2.$
+
+
+\subsection{Vectores aleatorios discretos}
+
+Si las variables aleatorias componentes de un vector aleatorio $(X,Y)$ son discretas, entonces tanto $\text{Ran}\,X$ como $\text{Ran}\,Y$ son conjuntos numerables, lo que implica que $\text{Ran}\,(X,Y)$ es también un conjunto numerable, por ser un subconjunto de un producto cartesiano de conjuntos numerables, esto es que $\text{Ran}\,(X,Y)\subseteq\text{Ran}\,X\times\text{Ran}\,Y,$ donde la igualdad puede o no cumplirse, porque aun teniendo que $\prob(X=x)>0$ y $\prob(Y=y)>0$ puede ocurrir que simultáneamente esto no sea posible, es decir que $\prob\big((X,Y)=(x,y)\big)=0$ para algún (o algunos) par(es) de números reales $(x,y),$ como se ilustra en el siguiente:
+
+\bigskip
+
+\begin{ejem}\label{ej:BernoulliBiv1}
+    Considere una variable aleatoria $X$ con distribución de probabilidad Bernoulli con parámetro $0<\theta<1,$ lo que implica que $\text{Ran}\,X=\{0,1\},$ $\prob(X=1)=\theta\,$ y $\,\prob(X=0)=1-\theta.$ Si definimos ahora la variable aleatoria $Y=1-X$ es inmediato deducir que $\text{Ran}\,Y=\{0,1\},$ $\prob(Y=1)=1-\theta,$ y que $\prob(Y=0)=\theta,$ es decir que $Y$ resulta ser también una variable aleatoria Bernoulli, pero con parámetro $1-\theta.$ Aunque el producto cartesiano: $$\text{Ran}\,X\,\times\,\text{Ran}\,Y \,=\, \{(0,0), (0,1), (1,0), (1,1)\}$$
+    notemos que, por ejemplo, $(1,1)\notin\text{Ran\,}(X,Y)$ ya que:
+    \begin{eqnarray*}
+        \prob\big((X,Y)=(1,1)\big) &=& \prob\big(\{\omega\in\Omega:X(\omega)=1\}\cap\{\omega\in\Omega:Y(\omega)=1\}\big) \\
+        &=& \prob\big(\{\omega\in\Omega:X(\omega)=1\}\cap\{\omega\in\Omega:1-X(\omega)=1\}\big) \\
+        &=& \prob\big(\{\omega\in\Omega:X(\omega)=1\}\cap\{\omega\in\Omega:X(\omega)=0\}\big) \\
+        &=& \prob(\varnothing) \,=\, 0,
+    \end{eqnarray*}
+    y de forma análoga se concluye que $(0,0)\notin\text{Ran}\,(X,Y).$ Por otro lado:
+    \begin{eqnarray*}
+        \prob\big((X,Y)=(1,0)\big) &=& \prob\big(\{\omega\in\Omega:X(\omega)=1\}\cap\{\omega\in\Omega:Y(\omega)=0\}\big) \\
+        &=& \prob\big(\{\omega\in\Omega:X(\omega)=1\}\cap\{\omega\in\Omega:1-X(\omega)=0\}\big) \\
+        &=& \prob\big(\{\omega\in\Omega:X(\omega)=1\}\cap\{\omega\in\Omega:X(\omega)=1\}\big) \\
+        &=& \prob\big(\{\omega\in\Omega:X(\omega)=1\}\big) \,=\, \theta,\\
+    \end{eqnarray*}
+    y de forma análoga se deduce que $\prob\big((X,Y)=(0,1)\big)=1-\theta,$ por lo que en este ejemplo:
+    $$\text{Ran}\,(X,Y)=\{(0,1),(1,0)\} \,\subsetneq\,\text{Ran}\,X\times\text{Ran}\,Y.$$ \qed 
+\end{ejem}
+
+\begin{defi}\label{def:vecdiscreto}
+    Un \textbf{vector aleatorio} $(X,Y)$ se denomina \textbf{discreto} si sus variables aleatorias componentes son discretas. \qed 
+\end{defi}
+
+Lo anterior implica que $\text{Ran}\,(X,Y)\subseteq\text{Ran}\,X\times\text{Ran}\,Y$ es un conjunto numerable y, de forma análoga al caso de variables aleatorias discretas, basta con poder calcular $\prob\big((X,Y)=(x,y)\big)$ para cualquier $(x,y)\in\text{Ran}\,(X,Y),$ ya que para cualquier $B\in\mathfrak{B}(\Runo^2)$ la probabilidad correspondiente se calcula mediante:
+\begin{equation}\label{eq:probdiscreta}
+    \prob\big((X,Y)\in B\big) \,=\, \sum_{(x,y)\in B\cap\text{Ran}\,(X,Y)}\prob\big((X,Y)=(x,y)\big),
+\end{equation}
+lo cual motiva la siguiente:
+
+\bigskip
+
+\begin{defi}\label{def:fmpconjunta}
+    La \textbf{función de masa de probabilidades conjunta} de un vector aleatorio discreto $(X,Y)$ se denota y define mediante: $$p_{X,Y}(x,y) \,:=\, \prob\big((X,Y)=(x,y)\big).$$ \qed 
+\end{defi}
+
+\noindent Entonces $p_{X,Y}(x,y)>0$ si solo si $(x,y)\in\text{Ran}\,(X,Y).$ Más aún:
+
+\begin{equation}\label{eq:fmpconjunta}
+    p_{X,Y}(x,y) \,=\, \prob\big(\{\omega\in\Omega:X(\omega)=x\}\,\cap\,\{\omega\in\Omega:Y(\omega)=y\}\big) \,\equiv\, \prob(X=x,Y=y),
+\end{equation}
+
+\medskip 
+
+\noindent donde $\{\omega\in\Omega:X(\omega)=x\}\,$ y $\,\{\omega\in\Omega:Y(\omega)=y\}$ son subconjuntos del espacio muestral $\Omega$ que representan eventos en un mismo espacio de probabilidad $(\Omega,\mathfrak{F},\prob),$ y que por separado pudiera ocurrir que tengan probabilidad positiva, pero al intersectarlos, si son disjuntos, su intersección resultaría vacía y, por tanto, con probabilidad cero, es decir, aún teniendo $p_X(x)=\prob\big(\{\omega\in\Omega:X(\omega)=x\}\big)>0,$ y $\,p_Y(y)=\prob\big(\{\omega\in\Omega:Y(\omega)=y\}\big)>0,$ si $\{\omega\in\Omega:X(\omega)=x\}\cap\{\omega\in\Omega:Y(\omega)=y\}=\varnothing\,$ entonces $\,p_{X,Y}(x,y)=0.$
+
+\medskip 
+
+Si para cada $(x,y)\in\text{Ran}\,(X,Y)$ definimos la imagen inversa:
+\begin{equation*}
+    E_{x,y} \,:=\, (X,Y)^{(-1)}(\{(x,y)\}) \,=\, \{\omega\in\Omega:(X(\omega),Y(\omega))=(x,y)\}\in\mathfrak{F}
+\end{equation*}
+entonces $p_{X,Y}(x,y)=\prob(E_{x,y})>0$ y además la colección $\{E_{x,y}:(x,y)\in\text{Ran}\,(X,Y)\}$ constituye una partición de $\Omega,$ y por lo tanto:
+\begin{eqnarray*}
+    1 \,=\, \prob(\Omega) \,=\, \prob\Big(\bigcup_{(x,y)\,\in\,\text{Ran}(X,Y)}\!\!\!\!\!\!E_{x,y}\Big) \,=\, \sum_{(x,y)\,\in\,\text{Ran}(X,Y)}\!\!\!\!\!\!\!\!\!\!\prob(E_{x,y}) \,=\, \sum_{(x,y)\,\in\,\text{Ran}(X,Y)}\!\!\!\!\!\!\!\!\!\!p_{X,Y}(x,y)
+\end{eqnarray*}
+Lo anterior implica que la función de masa de probabilidades (conjunta) de un vector aleatorio discreto $(X,Y)$ siempre cumple las siguientes propiedades:
+\begin{itemize}
+    \item $p_{X,Y}(x,y)>0$ para todo $(x,y)\in\text{Ran}\,(X,Y)\,,$
+    \item $\displaystyle{\sum_{(x,y)\,\in\,\text{Ran}(X,Y)}\!\!\!\!\!\!\!\!\!\!p_{X,Y}(x,y)\,=\,1\,,}$
+\end{itemize}
+
+\medskip 
+
+A partir de $p_{X,Y}$ es posible deducir las funciones de masa de probabilidades marginales (o individuales) de cada una de las variables aleatorias discretas componentes:
+\begin{eqnarray*}
+    p_X(x) &=& \prob(X=x) \,=\, \prob(\{\omega\in\Omega:X(\omega)=x\}) \\ 
+           &=& \prob(\{\omega\in\Omega:X(\omega)=x\}\cap\Omega) \\
+           &=& \prob(\{\omega\in\Omega:X(\omega)=x\}\cap\bigcup_{y\,\in\,\text{Ran}\,Y}\{\omega\in\Omega:Y(\omega)=y\}) \\ 
+           &=& \prob\Big(\bigcup_{y\,\in\,\text{Ran}\,Y}\{\omega\in\Omega:X(\omega)=x\}\cap\{\omega\in\Omega:Y(\omega)=y\}\Big) \\ 
+           &=& \sum_{y\,\in\,\text{Ran}\,Y} \prob(\{\omega\in\Omega:X(\omega)=x\}\cap\{\omega\in\Omega:Y(\omega)=y\}) \\ 
+           &=& \sum_{y\,\in\,\text{Ran}\,Y}p_{X,Y}(x,y)
+\end{eqnarray*}
+
+Al procedimiento de deducir las funciones de masa de probabilidades marginales de un vector aleatorio discreto $(X,Y)$ a partir de su función de masa de probabilidades conjunta se le denomina \textit{marginalización:}
+\begin{equation}\label{eq:marginaldiscreta}
+    p_X(x) = \sum_{y\,\in\,\text{Ran}\,Y}p_{X,Y}(x,y)\,,\qquad p_Y(y) = \sum_{x\,\in\,\text{Ran}\,X}p_{X,Y}(x,y).
+\end{equation}
+
+Como consecuencia inmediata a partir de aplicar la Proposición \ref{prop:medidasprob} f con $E_1=\{\omega\in\Omega:X(\omega)=x\}\,$ y $\,E_2=\{\omega\in\Omega:Y(\omega)=y\},$ obtenemos la siguiente relación entre la función de masa de probabilidades conjunta y sus marginales:
+\begin{equation}\label{eq:FHdiscreta}
+    \max\{p_X(x)+p_Y(y)-1,0\}\leq p_{X,Y}(x,y)\leq\min\{p_X(x),p_Y(y)\}\,.
+\end{equation}
+
+Sin embargo, el solo conocimiento de las funciones de masa de probabilidades marginales $p_X$ y $p_Y$ no permite reconstruir, en general, la función de masa de probabilidades conjunta $p_{X,Y},$ como se verá en el siguiente:
+
+\bigskip
+
+\begin{ejem}\label{ej:BernoulliBiv2}
+   \textbf{Distribución Bernoulli bivariada.} Obtendremos la fórmula general para la función de masa de probabilidades conjunta de un vector aleatorio discreto $(X,Y),$ donde $X$ sea una variable aleatoria Bernoulli con parámetro $0<\theta_1<1\,$ e $\,Y\,$ una variable aleatoria Bernoulli con parámetro $0<\theta_2<1.$ Como en este caso $\text{Ran}\,(X,Y)\subseteq\text{Ran}\,X\times\text{Ran},$ el caso general debe considerar el rango más amplio posible, es decir:
+   $$\text{Ran}\,(X,Y)\,=\,\{(0,0),(0,1),(1,0),(1,1)\}.$$
+   Denotemos: $$p_{ij}\,:=\,p_{X,Y}(i,j)=\prob(X=i,Y=j)\,,\qquad (i,j)\in\text{Ran\,(X,Y)},$$
+   y por lo tanto debemos encontrar números reales $\{p_{00},p_{01},p_{10},p_{11}\}\subset[0,1]$ tales que $p_{00}+p_{01}+p_{10}+p_{11}=1,$ que además satisfagan la características marginales (individuales) de $X$ e $Y,$ esto es, tales que:
+   \begin{align*}
+       p_X(0) = 1 - \theta_1 = p_{00} + p_{01}\,,\qquad p_X(1) = \theta_1 = p_{10} + p_{11}\,, \\
+       p_Y(0) = 1 - \theta_2 = p_{00} + p_{10}\,,\qquad p_Y(1) = \theta_2 = p_{01} + p_{11}\,.
+   \end{align*}
+   Es decir, tenemos que resolver el siguiente sistema de ecuaciones con restricciones:
+   \begin{eqnarray}
+       0 \leq p_{ij} \leq 1\,, &{ }& (i,j) \in \{(0,0),(0,1),(1,0),(1,1)\}\,, \label{e1} \\
+       p_{00} + p_{01} + p_{10} + p_{11} &=& 1\,, \label{e2} \\
+       p_{00} + p_{01} &=& 1 -\theta_1\,, \label{e3}\\
+       p_{10} + p_{11} &=& \theta_1\,,\label{e4}\\
+       p_{00} + p_{10} &=& 1 - \theta_2\,,\label{e5} \\
+       p_{01} + p_{11} &=& \theta_2\,.\label{e6}
+   \end{eqnarray}
+   La ecuación (\ref{e2}) implica que basta determinar tres valores $p_{ij}$ y el cuarto se deduce, por ejemplo:
+\begin{equation}\label{e7}
+    p_{00} \,=\, 1 \,-\, p_{01} \,-\, p_{10} \,-\, p_{11}\,.
+\end{equation}
+De hecho, al sustituir (\ref{e7}) en (\ref{e3}) obtenemos (\ref{e4}), y al sustituir (\ref{e7}) en (\ref{e5}) obtenemos (\ref{e6}), por lo que el sistema de ecuaciones se reduce a lo siguiente:
+\begin{eqnarray}
+    p_{10} &=& \theta_1 - p_{11}\,, \label{e8} \\ 
+    p_{01} &=& \theta_2 - p_{11}\,, \label{e9} \\ 
+    p_{00} &=& 1 - \theta_1-\theta_2+p_{11}\,, \label{e10} 
+\end{eqnarray}
+siendo lo anterior un sistema de 3 ecuaciones con 4 incógnitas, lo que en este caso conduce a una infinidad de soluciones que pueden caracterizarse, por ejemplo, en términos de un valor admisible que se asigne a $p_{11},$ que en principio tenemos que $0\leq p_{11}\leq 1,$ pero la propiedad (\ref{eq:FHdiscreta}) impone una restricción mayor:
+\begin{equation}\label{e11}
+    \max\{\theta_1+\theta_2-1,0\} \,\leq\, p_{11} \,\leq\, \min\{\theta_1,\theta_2\}\,.
+\end{equation}
+Esto es, existe una infinidad no numerable de valores admisibles para $p_{11},$ y una vez escogido alguno entonces aplicando (\ref{e8}), (\ref{e9}) y (\ref{e10}) se deducen los valores correspondientes para $p_{10},$ $p_{01}$ y $p_{00}.$ Con esto queda demostrado que existe una infinidad no numerable de funciones de masa de probabilidad conjunta $p_{X,Y}$ que tienen exactamente las mismas marginales, Bernoulli con parámetro $\theta_1$ para $X,$ y Bernoulli con parámetro $\theta_2$ para $Y,$ y por lo tanto el solo conocimiento de las funciones de masa de probabilidad marginales no permite identificar la función de masa de probabilidad conjunta.  \qed 
+\end{ejem}
+
+De forma análoga, para el caso de dimensión $3,$ en el caso de un vector aleatorio discreto $(X,Y,Z)$ su función de masa de probabilidades conjunta estaría dada por:
+\begin{eqnarray*}
+    p_{X,Y,Z}(x,y,z) &:=& \prob\big((X,Y,Z)=(x,y,z)\big) \\
+                     &=& \prob\big(\{\omega\in\Omega:X(\omega)=x\}\,\cap\,\{\omega\in\Omega:Y(\omega)=y\}\,\cap\,\{\omega\in\Omega:Z(\omega)=z\}\big) \\ 
+                     &\equiv& \prob(X=x,Y=y,Z=z)\,,
+\end{eqnarray*}
+y mediante una argumentación análoga a lo obtenido en (\ref{eq:marginaldiscreta}) en este caso se pueden obtener tres funciones de masa de probabilidad conjunta de dimensión $2,$ para los vectores aleatorios $(X,Y),$ $(X,Z)$ e $(Y,Z):$
+\begin{equation*}
+    p_{X,Y}(x,y) = \sum_{z\,\in\,\text{Ran}\,Z}\!\!\!p_{X,Y,Z}(x,y,z)\,,\quad p_{X,Z}(x,z) = \sum_{y\,\in\,\text{Ran}\,Y}\!\!\!p_{X,Y,Z}(x,y,z)\,,\quad p_{Y,Z}(y,z) = \sum_{x\,\in\,\text{Ran}\,X}\!\!\!p_{X,Y,Z}(x,y,z)\,,
+\end{equation*}
+a partir de las cuales, a su vez, se pueden deducir las funciones de masa de probabilidad marginal $p_X,$ $p_Y$ y $p_Z.$
+
+% Vectores aleatorios discretos tridimensionales y sus marginales bi y unidimensionales
+
+
+\subsection{Vectores aleatorios absolutamente continuos}
+
+Ahora consideraremos el caso de un vector aleatorio $(X,Y)$ donde cada una de las variables aleatorias componentes es absolutamente continua (ver Definición \ref{def:vaabscont}), con funciones de densidad de probabilidades $f_X$ y $f_Y,$ respectivamente. 
+
+\bigskip
+
+\begin{defi}\label{def:vectorabscont}
+    Un \textbf{vector aleatorio} $(X,Y)$ se denomina \textbf{absolutamente continuo} si existe una función $f_{X,Y}:\Runo^2\rightarrow[0,+\infty[\,$ tal que para todo $B\in\mathfrak{B}(\Runo^2):$
+    $$\prob\big((X,Y)\in B\big) \,=\, \iint_B f_{X,Y}(x,y)\,dxdy\,,$$ y a la función $f_{X,Y}$ se le denomina \textbf{función de densidad conjunta de probabilidades.} \qed 
+\end{defi}
+
+Como necesariamente $\prob\big((X,Y)\in\Runo^2\big)=1$ entonces la definición anterior implica en particular que:
+$$\iint_{\Runo^2}f_{X,Y}(x,y)\,dxdy \,=\, 1.$$
+
+A partir de $f_{X,Y}$ es posible deducir las funciones de densidad marginales de cada una de las variables aleatorias, procedimiento al que denominamos \textit{marginalización}, aplicando (\ref{eq:fdp}) y (\ref{eq:fdp2}):
+\begin{eqnarray*}
+    F_{X}(x) &=& \prob(X\leq x) = \prob(\{\omega\in\Omega:X(\omega)\leq x\}) = \prob(\{\omega\in\Omega:X(\omega)\leq x\} \cap \Omega)\\ 
+             &=& \prob(\{\omega\in\Omega:X(\omega)\leq x\} \cap \{\omega\in\Omega:-\infty < Y(\omega) < +\infty\}) \\
+             &=& \prob\big((X,Y)\in\,\,]-\infty,x]\times]-\infty,+\infty[\,\big) \\ 
+             &=& \int_{-\infty}^{\,x}\int_{-\infty}^{+\infty}f_{X,Y}(s,y)\,dyds = \int_{-\infty}^{\,x}\psi(s)\,ds\,,
+\end{eqnarray*}
+donde $\psi(s):=\int_{-\infty}^{+\infty}f_{X,Y}(s,y)\,dy,$ y luego aplicando el Teorema Fundamental del Cálculo obtenemos:
+\begin{eqnarray}\label{eq:marginalizafdpconjunta}
+    f_{X}(x) &=& \frac{d}{dx}F_{X}(x) = \frac{d}{dx}\int_{-\infty}^{\,x}\psi(s)\,ds = \psi(x) \nonumber\\
+             &=& \int_{-\infty}^{+\infty}f_{X,Y}(x,y)\,dy\,,
+\end{eqnarray}
+y de manera análoga se obtiene $f_{Y}(y)=\int_{-\infty}^{+\infty}f_{X,Y}(x,y)\,dx.$ También, a partir de $f_{X,Y}$ podemos obtener la función de distribución conjunta mediante:
+\begin{equation}\label{eq:teorfundcalcbiv1}
+    F_{X,Y}(x,y) \,=\, \prob\big((X,Y)\in\,]-\infty,x]\times\,]-\infty,y]\big) \,=\, \int_{-\infty}^{\,x}\int_{-\infty}^{\,y}f_{X,Y}(s,t)\,dsdt,
+\end{equation}
+y por tanto, como consecuencia del Teorema Fundamental del Cálculo, tenemos que para todo $(x,y)\in\Runo^2$ donde $f_{X,Y}$ sea continua entonces $F_{X,Y}$ es derivable:
+\begin{equation}\label{eq:teorfundcalcbiv2}
+    \frac{\partial^2}{\partial x\partial y}F_{X,Y}(x,y) \,=\, f_{X,Y}(x,y)\,.
+\end{equation}
+
+Pero el que $(X,Y)$ sea un vector de variables aleatorias absolutamente continuas no implica necesariamente que el vector sea absolutamente continuo, es decir, la existencia de una función de densidad conjunta no está garantizada. Por ejemplo, sea $X$ una variable aleatoria absolutamente continua, $g:\Runo\rightarrow\Runo$ una función continua y estrictamente creciente, y defínase una variable aleatoria $Y:=g(X).$ Es inmediato verificar que $F_{X,Y}(x,y)=\min\{F_X(x),F_Y(y)\}$ y por tanto $\displaystyle{\frac{\partial^2}{\partial x\partial y}}F_{X,Y}(x,y)=0,$ donde claramente la constante cero no es una función de densidad conjunta de probabilidades.
+
+\bigskip 
+
+% Ejemplo de densidad conjunta uniforme sobre un conjunto acotado (triángulo, por ejemplo)
+\begin{ejem}\label{ej:unifbiv}
+    \textbf{Densidad conjunta uniforme sobre un conjunto acotado.} Sea $C\subset\Runo^2$ un conjunto acotado y con área positiva $\varDelta(C)>0.$ Si definimos una función $f:\Runo^2\rightarrow[0,+\infty[\,$ mediante:
+    $$f(x,y) \,:=\, \frac{1}{\varDelta(C)}\,\indic_C(x,y)$$
+    entonces:
+    $$\iint_{\Runo^2}f(x,y)\,dxdy \,=\, \frac{1}{\varDelta(C)}\iint_C dxdy \,=\, \frac{1}{\varDelta(C)}\,\varDelta(C)=1.$$ Si $(X,Y)$ es un vector absolutamente continuo con la función de densidad $f(x,y)$ anterior, entonces para cualquier $B\in\mathfrak{B}(\Runo^2)$ tenemos que:
+    $$\prob\big((X,Y)\in B\big) \,=\, \frac{1}{\varDelta(C)}\iint_B\indic_C(x,y)\,dxdy \,=\, \frac{1}{\varDelta(C)}\iint_{B\,\cap\,C}dxdy \,=\, \frac{\varDelta(B\cap C)}{\varDelta(C)}\,.$$
+    Y para deducir sus funciones de densidad marginal, por ejemplo la de $X$ sería mediante:
+    $$f_X(x) \,=\, \frac{1}{\varDelta(C)}\int_{-\infty}^{\,+\infty}\indic_C(x,y)\,dy.$$
+    Y si en particular el conjunto $C$ puede expresarse como $C=\{(x,y)\in\Runo^2:x\in A, g_1(x) \leq y \leq g_2(y)\}$ entonces:
+    $$f_X(x) \,=\, \frac{1}{\varDelta(C)}\int_{-\infty}^{\,+\infty}\indic_A(x)\indic_{\{g_1(x)\,\leq\,y\,\leq\,g_2(x)\}}\,dy \,=\, \frac{\indic_A(x)}{\varDelta(C)}\int_{g_1(x)}^{\,g_2(x)}dy \,=\, \frac{g_2(x)-g_1(x)}{\varDelta(C)}\,\indic_A(x)\,,$$
+    y lo análogo para la densidad marginal $f_Y\,.$ \qed 
+\end{ejem}
+
+Si $(X,Y)$ es un vector aleatorio absolutamente continuo, la ecuación (\ref{eq:marginalizafdpconjunta}) implica que sus variables aleatorias componentes son también absolutamente continuas. Pero al revés, no necesariamente: puede ocurrir que $X$ e $Y$ sean marginalmente (individualmente) absolutamente continuas, con funciones de densidad de probabilidades $f_X$ y $f_Y,$ respectivamente, pero que el vector aleatorio $(X,Y)$ no sea absolutamente continuo, es decir, que no exista su función de densidad conjunta. Esto último se ilustra en el siguiente:
+
+\bigskip 
+
+\begin{ejem}\label{ej:vectorcontNoabscont}
+    Sea $X$ una variable aleatoria absolutamente continua con función de densidad de probabilidades uniforme sobre el intervalo abierto $\,]0,1[\,,$ esto es $f_X(x)=\indic_{\{0\,<\,x\,<\,1\}},$ y por lo tanto con función de distribución \linebreak  $F_X(t)=\int_{-\infty}^{\,t}f_X(x)dx = x\indic_{\{0\,<\,x\,<\,1\}}+\indic_{\{x\,\geq\,1\}}.$ Definamos la variable aleatoria $Y:=X^2.$ Como $\text{Ran}\,X=\,]0,1[\,$ entonces $\text{Ran}\,Y=\,]0,1[\,$ también, ya que si $0<x<1$ entonces $0<x^2<1.$ Deducimos la función de distribución de probabilidades de $Y:$
+    $$F_Y(y) \,=\, \prob(Y\leq y) \,=\, \begin{cases}
+        \,0\,, & \text{ si } \,y\leq 0, \\
+        \prob(X^2\leq y) = \prob(X\leq\sqrt{y}) = F_X(\sqrt{y}) = \sqrt{y}\,, & \text{ si } \,0<y<1, \\
+        \,1\,, & \text{ si } \,y\geq 1. 
+    \end{cases}$$
+    Como $F_Y(y)$ es derivable para todo $y\in\Runo\setminus\{0,1\}$ (es decir, en todo $\Runo$ excepto en una cantidad numerable de puntos aislados, en este caso $y=0$ e $y=1$) entonces $Y$ resulta ser también una variable aleatoria absolutamente continua, con función de densidad de probabilidades:
+    $$f_Y(y) \,=\, \frac{d}{dy}F_Y(y) \,=\, \frac{1}{\sqrt{y}}f_X(\sqrt{y}) \,=\, \frac{1}{\sqrt{y}}\indic_{\{0\,<\,y\,<\,1\}}\,.$$
+    Ahora obtengamos la función de distribución conjunta $F_{X,Y}:\Runo^2\rightarrow[0,1]$ del vector aleatorio $(X,Y):$
+    \begin{eqnarray*}
+        F_{X,Y}(x,y) &=& \prob(X\leq x,Y\leq y) = \prob(X\leq x, X^2\leq y) = \prob(X\leq x, X\leq\sqrt{y}) \\
+                     &=& \prob(X\leq\min\{x,\sqrt{y}\}) = F_X(\min\{x,\sqrt{y}\}) \\ 
+                     &=& \begin{cases}
+                            \,1\,, & x\geq 1\,\wedge\,y\geq 1\,,\\
+                            \,x\,, & 0<x<1\,\wedge\,y\geq x^2\,,\\
+                            \sqrt{y}\,, & 0<y<1\,\wedge\,x>\sqrt{y}\,,\\
+                            \,0\,, & x\leq 0 \,\vee\,y\leq 0.
+                         \end{cases}
+    \end{eqnarray*}
+    $F_{X,Y}$ es dos veces diferenciable sobre todo $\Runo^2$ excepto sobre el conjunto de área cero $C:=C_1\cup C_2\cup C_3$ donde:
+    \begin{eqnarray*}
+        {} &{ }& C_1 := \{(x,y)\in\Runo^2:x\geq 0,y\in\{0,1\}\} \\
+           &{ }& C_2 := \{(0,y)\in\Runo^2:x\in\{0,1\}, y\geq 0\} \\
+           &{ }& C_3 := \{(x,x^2)\in\Runo^2:0\leq x\leq 1\}
+    \end{eqnarray*}
+    pero para todo $(x,y)\in\Runo^2\setminus C:$
+    $$\frac{\partial^2}{\partial x\partial y}F_{X,Y}(x,y) \,=\, 0\,,$$
+    lo cual evidentemente no cumple con ser una función de densidad conjunta ya que $\iint_{\Runo^2}0\,dxdy=0\neq 1,$ y tenemos así el caso de un vector aleatorio $(X,Y)$ de variables aleatorias absolutamente continuas, cuya función de densidad conjunta no existe. \qed  
+\end{ejem}
+
+
+
+	
+\newpage
+\section{Distribuciones condicionales e independencia}\label{sec:condicindep}
+	
+% concepto general de dependencia
+Dado un vector aleatorio $(X,Y)$ definido sobre un espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ buscaremos ahora analizar la influencia que tiene una de las variables aleatorias componentes en el cálculo de probabilidades de la otra. Por ejemplo ?`qué tanto cambiaría $\prob(Y\in B)$ si ante un valor observado $\omega\in\Omega$ se sabe que $X(\omega)\in A$? ?`Cómo incorporar o reflejar esta información en el cálculo de $\prob(Y\in B)$? 
+
+\medskip 
+
+Como $Y^{(-1)}(B)=\{\omega\in\Omega:Y(\omega)\in B\}\in\mathfrak{F}$ y $X^{(-1)}(A)=\{\omega\in\Omega:X(\omega)\in A\}\in\mathfrak{F}$ representan eventos sobre el mismo espacio de probabilidad, la pregunta anterior nos conduce a calcular la siguiente probabilidad condicional sobre dicho espacio mediante la Definición \ref{def:probacond}:
+\begin{eqnarray}\label{eq:probacond}
+    \prob(\{\omega\in\Omega:Y(\omega)\in B\}\,|\,\{\omega\in\Omega:X(\omega)\in A\}) &=& \frac{\prob(\{\omega\in\Omega:X(\omega)\in A\}\cap\{\omega\in\Omega:Y(\omega)\in B\})}{\prob(\{\omega\in\Omega:X(\omega)\in A\})} \nonumber \\ 
+    &=& \frac{\prob(\{\omega\in\Omega:(X(\omega),Y(\omega))\in A\times B\})}{\prob(\{\omega\in\Omega:X(\omega)\in A\})} \nonumber \\
+    \prob(Y\in B\,|\,X\in A) &=& \frac{\prob((X,Y)\in A\times B)}{\prob(X\in A)}\,.
+\end{eqnarray}
+
+Es decir, sin tener información sobre el valor que reporta la variable aleatoria $X$ calcularíamos $\prob(Y\in B)$ mediante la distribución de probabilidad marginal de $Y$ únicamente (mediante su función de distribución $F_Y$ o bien mediante su función de masa o densidad marginal, según sea el caso). Pero ante el conocimiento de que el evento $\{\omega\in\Omega:X(\omega)\in A\}$ ha ocurrido, la probabilidad del evento $\{\omega\in\Omega:Y(\omega)\in B\}$ se actualiza a $\prob(Y\in B\,|\,X\in A)$ dada por (\ref{eq:probacond}), siempre que $\prob(X\in A)>0.$ 
+
+
+\subsection{Caso discreto}
+
+En el caso particular de que $(X,Y)$ sea un vector aleatorio discreto con función de masa de probabilidades conjunta $p_{X,Y}$ y funciones de masa de probabilidades marginales $p_X$ y $p_Y,$ respectivamente, si $x\in\text{Ran}\,X$ y definimos $A:=\{x\}$ y $B:=\{y\}$ en (\ref{eq:probacond}) obtenemos:
+\begin{equation}\label{eq:probacond2}
+    \prob(Y=y\,|\,X=x) \,=\, \frac{\prob(X=x,Y=y)}{\prob(X=x)} \,=\, \frac{p_{X,Y(x,y)}}{p_X(x)}
+\end{equation}
+donde está garantizado que $p_X(x)>0$ si $x\in\text{Ran}\,X.$ Esto es, la probabilidad $\prob(Y=y)=p_Y(y)$ se actualiza a $\prob(Y=y\,|\,X=x)$ ante la información de que ocurrió (o así lo suponemos) el evento $\{\omega\in\Omega:X(\omega)=x\}\in\mathfrak{F}.$ De (\ref{eq:probacond2}) es inmediato notar que $\prob(Y=y\,|\,X=x)\geq 0$ ya que $p_{X,Y}(x,y)\geq 0$ y $p_X(x)>0,$ y además que $\prob(Y=y\,|\,X=x)\leq 1$ ya que, como consecuencia de la Proposición \ref{prop:medidasprob}\,d, se deduce que:
+\begin{equation*}
+    p_{X,Y}(x,y) \,=\, \prob(\{\omega\in\Omega:X(\omega)=x\}\cap\{\omega\in\Omega:Y(\omega)=y\}) \,\leq\, \prob(\{\omega\in\Omega:X(\omega)=x\}) = p_X(x).
+\end{equation*}
+También, aplicando (\ref{eq:marginaldiscreta}) obtenemos:
+\begin{equation*}
+    \sum_{y\,\in\,\text{Ran}\,Y}\prob(Y=y\,|\,X=x) \,=\, \frac{1}{p_X(x)}\sum_{y\,\in\,\text{Ran}\,Y}p_{X,Y}(x,y) \,=\, \frac{1}{p_X(x)}\,p_X(x) \,=\,1,
+\end{equation*}
+lo que implica que (\ref{eq:probacond2}) cumple con las propiedades de una función de masa de probabilades para la variable aleatoria discreta $Y,$ posiblemente distinta a la marginal $p_Y$ ya que incorpora la ocurrencia del evento $\{X=x\},$ motivando la siguiente: 
+
+\bigskip 
+
+\begin{defi}\label{def:fmpcondicional}
+    Sea $(X,Y)$ un vector aleatorio discreto con función de masa de probabilidades conjunta $p_{X,Y},$ y con funciones de masa de probabilidades marginales $p_X$ y $p_Y,$ respectivamente. Para toda $x\in\text{Ran}\,X$ (y por tanto $p_X(x)>0$) se denota y define la \textbf{función de masa de probabilidades condicional} para $Y$ dado el evento $\{X=x\}$ como:
+    \begin{equation*}
+        p_{Y|X}(y\,|\,x) \,:=\, \frac{p_{X,Y}(x,y)}{p_X(x)}\,.
+    \end{equation*}
+    Análogamente, para toda $y\in\text{Ran}\,Y$ (y por tanto $p_Y(y)>0$) se denota y define la función de masa de probabilidades condicional para $X$ dado el evento $\{Y=y\}$ como:
+    \begin{equation*}
+        p_{X|Y}(x\,|\,y) \,:=\, \frac{p_{X,Y}(x,y)}{p_Y(y)}\,.
+    \end{equation*} \qed 
+\end{defi}
+
+Tanto $p_Y(y)$ como $p_{Y|X}(y\,|\,x)$ son funciones de masa de probabilidades univariadas para la misma variable aleatoria discreta $Y,$ con la diferencia que $p_{Y|X}(y\,|\,x)$ toma en cuenta (o supone) que el evento $\{X=x\}$ ha ocurrido, mientras que $p_Y(y)$ no lo toma en cuenta. Como $x\in\text{Ran}\,X,$ el valor $x$ se convierte un un \textit{parámetro} de la función de masa de probabilidades $p_{Y|X}(y\,|\,x),$ ya que valores distintos de $x$ pudieran arrojar distintas probabilidades condicionales, es decir si $x_1\neq x_2$ podría (o no) resultar que $p_{Y|X}(y\,|\,x_1)\neq p_{Y|X}(y\,|\,x_2).$
+
+\medskip 
+
+Utilizamos $p_{Y|X}(y\,|\,x)$ en lugar de $p_Y(y)$ cuando requerimos hacer cálculo de probabilidades con la variable aleatoria discreta $Y$ tomando en cuenta la posible influencia del evento $\{X=x\}.$ Si para todo $x\in\text{Ran}\,X$ el evento $\{X=x\}$ no influye en el cálculo de probabilidades con la variable aleatoria $Y$ tendríamos lo siguiente:
+\begin{equation}\label{eq:indepdiscreta}
+    \prob(Y=y\,|\,X=x) = \prob(Y=y) \,\Leftrightarrow\, \frac{p_{X,Y}(x,y)}{p_X(x)} = p_Y(y) \,\Leftrightarrow\, p_{X,Y}(x,y) = p_X(x)p_Y(y)\,,
+\end{equation}
+y a la misma conclusión (\ref{eq:indepdiscreta}) llegaríamos partiendo de $\prob(X=x\,|\,Y=y)=\prob(X=x)$ para todo $y\in\text{Ran}\,Y.$ Dado un vector aleatorio discreto, el que los valores de una de las variables no influya en el cálculo de probabilidades de otras nos conduce al concepto de \textit{independencia} entre variables aleatorias: 
+
+\bigskip 
+
+\begin{defi}\label{def:indepdiscreta}
+    Dado un vector aleatorio discreto $(X,Y)$ con función de masa de probabilidades conjunta $p_{X,Y},$ y funciones de masa de probabilidades marginales $p_X$ y $p_Y,$ respectivamente, decimos que $X$ e $Y$ son \textbf{variables aleatorias independientes} si y solo si:
+    \begin{equation*}
+        p_{X,Y}(x,y) \,=\, p_X(x)p_Y(y)\,.
+    \end{equation*} \qed 
+\end{defi}
+
+Si de un vector aleatorio discreto $(X,Y)$ conocemos su función de masa de probabilidades conjunta $p_{X,Y},$ a partir de esta última podemos deducir las funciones de masa de probabilidades marginales $p_X$ y $p_Y$ mediante (\ref{eq:marginaldiscreta}), y solo en caso de que $p_X(x)p_Y(y)=p_{X,Y}(x,y)$ podemos entonces afirmar que $X$ e $Y$ son variables aleatorias independientes. En otro sentido, si solo conocemos las funciones de masa de probabilidades marginales $p_X$ y $p_Y,$ solo en el caso de que sepamos además que $X$ e $Y$ son independientes podríamos entonces deducir que la función de masa de probabilidades conjunta de $(X,Y)$ es $p_{X,Y}(x,y)=p_X(x)p_Y(y).$
+
+\bigskip
+
+\begin{ejem}\label{ej:BernoulliBiv2a}
+    \textbf{Distribución Bernoulli bivariada.} Si en el Ejemplo \ref{ej:BernoulliBiv2} definimos como $\theta_{12}:=p_{11}$ tenemos una función de masa de probabilidades conjunta $p_{X,Y}$ con parámetros $0<\theta_1<1,$ $0<\theta_2<1$ y $\max\{\theta_1+\theta_2-1,0\}\leq\theta_{12}\leq\min\{\theta_1,\theta_2\},$ donde $p_{ij}:=p_{X,Y}(i,j),$ con $(i,j)\in\{0,1\}^2$ y: 
+    \begin{eqnarray*}
+        p_{00} &=& 1 - \theta_1 -  \theta_2 + \theta_{12}\,,\\
+        p_{10} &=& \theta_1 - \theta_{12}\,,\\
+        p_{01} &=& \theta_2 - \theta_{12}\,,\\
+        p_{11} &=& \theta_{12}\,.
+    \end{eqnarray*}
+    Aplicando (\ref{eq:marginaldiscreta}) deducimos las marginales $p_{X}(x)=\theta_1^{\,x}(1-\theta_1)^{1-x}\indic_{\{0,1\}}(x)\,$ y $\,p_{Y}(y)=\theta_2^{\,y}(1-\theta_2)^{1-y}\indic_{\{0,1\}}(y).$ De acuerdo con la Definición \ref{def:indepdiscreta} $X$ e $Y$ son independientes si y solo si $p_{X,Y}(x,y)=p_X(x)p_Y(y),$ que en este caso equivale a que se cumplan las siguientes cuatro desigualdades:
+    \begin{eqnarray*}
+        1 - \theta_1 -  \theta_2 + \theta_{12} &=& (1-\theta_1)(1-\theta_2) \,,\\
+        \theta_1 - \theta_{12} &=& \theta_1(1-\theta_2) \,,\\
+        \theta_2 - \theta_{12} &=& (1-\theta_1)\theta_2 \,,\\
+        \theta_{12} &=& \theta_1\theta_2
+    \end{eqnarray*}
+    de lo cual se deduce que $X$ e $Y$ son independientes si y solo si $\theta_{12}=\theta_1\theta_2,$ valor admisible ya que es inmediato verificar que $\max\{\theta_1+\theta_2-1,0\}\leq\theta_1\theta_2\leq\min\{\theta_1,\theta_2\}.$ Si el parámetro $\theta_{12}\neq\theta_1\theta_2$ tenemos el caso de variables aleatorias dependientes, y procedemos a deducir las funciones de masa de probabilidades condicionales. Para el caso de $Y$ condicional en $X=x,$ como $x\in\{0,1\}$ tenemos los casos $p_{Y|X}(y\,|\,0)$ y $p_{Y|X}(y\,|\,1),$ cuyas fórmulas deducimos aplicando la Definición \ref{def:fmpcondicional}:
+    \begin{eqnarray*}
+        p_{Y|X}(y\,|\,0) &=& \frac{(\theta_2-\theta_{12})^y(1-\theta_1-\theta_2+\theta_{12})^{1-y}}{1-\theta_1}\indic_{\{0,1\}}(y) = \left(\frac{\theta_2-\theta_{12}}{1-\theta_1}\right)^y\left(1 - \frac{\theta_2-\theta_{12}}{1-\theta_1}\right)^{1-y}\indic_{\{0,1\}}(y) \,,\\
+        p_{Y|X}(y\,|\,1) &=& \frac{\theta_{12}^{\,y}(\theta_1-\theta_{12})^{1-y}}{\theta_1}\indic_{\{0,1\}}(y) = \left(\frac{\theta_{12}}{\theta_1}\right)^y\left(1 - \frac{\theta_{12}}{\theta_1}\right)^{1-y}\indic_{\{0,1\}}(y)\,,
+    \end{eqnarray*}
+    esto es, la distribución de probabilidad de $Y$ condicional en $X=0$ es Bernoulli con parámetro $\frac{\theta_2-\theta_{12}}{1-\theta_1},$ pero la distribución de probabilidad de $Y$ condicional en $X=1$ es Bernoulli con parámetro $\frac{\theta_{12}}{\theta_1},$ en contraste con la distribución marginal (no condicional) de $Y$ que es Bernoulli con parámetro $\theta_2.$ De forma análoga se deduce que la distribución de probabilidad de $X$ condicional en $Y=0$ es Bernoulli con parámetro $\frac{\theta_1-\theta_{12}}{1-\theta_2},$ y que la distribución de probabilidad de $X$ condicional en $Y=1$ es Bernoulli con parámetro $\frac{\theta_{12}}{\theta_2},$ en contraste con la distribución marginal (no condicional) de $X$ que es Bernoulli con parámetro $\theta_1.$ \qed 
+\end{ejem}
+
+Para tener idea del caso de vectores aleatorios discretos de dimensión mayor que $2,$ basta con considerar, por ejemplo, el caso de un vector aleatorio discreto $(X,Y,Z)$ con función de masa de probabilidades conjunta $p_{X,Y,Z},$ en cuyo caso se pueden deducir funciones de masa de probabilidades condicionales de dimensión $2,$ por ejemplo:
+$$p_{X,Z|Y}(x,z\,|\,y) = \prob(X=x,Z=z\,|\,Y=y) = \frac{\prob(X=x,Y=y,Z=z)}{\prob(Y=y)} = \frac{p_{X,Y,Z}(x,y,z)}{p_Y(y)}\,,$$
+o bien de dimensión $1,$ por ejemplo:
+$$p_{Z|X,Y}(z\,|\,x,y) = \prob(Z=z\,|\,X=x,Y=y) = \frac{\prob(X=x,Y=y,Z=z)}{\prob(X=x,Y=y)} = \frac{p_{X,Y,Z}(x,y,z)}{p_{X,Y}(x,y)}\,.$$ Y también, análogamente, las variables aleatorias $X,$ $Y$ y $Z$ son conjuntamente independientes si y solo si \linebreak $p_{X,Y,Z}(x,y,z)=p_X(x)p_Y(y)p_Z(z).$ Es importante notar que independencia por pares de variables no implica necesariamente la independencia conjunta de las tres: 
+
+\bigskip 
+
+\begin{ejem}\label{ej:BernoulliTri}
+    Considere un vector aleatorio discreto $(X,Y,Z)$ cuya función de masa de probabilidades conjunta $p_{X,Y,Z}$ está definida de la siguiente forma:
+    \begin{center}
+        \begin{tabular}{|c|c|} \hline
+		  $(x,y,z)$ & $p_{X,Y,Z}(x,y,z)$  \\ \hline\hline  
+		  $(0,0,0)$ & $1/4$  \\
+		  $(0,0,1)$ & $0$ \\ 
+		  $(0,1,0)$ & $0$ \\ 
+		  $(1,0,0)$ & $0$ \\
+		  $(0,1,1)$ & $1/4$ \\
+		  $(1,0,1)$ & $1/4$ \\
+		  $(1,1,0)$ & $1/4$ \\
+		  $(1,1,1)$ & $0$ \\ \hline 
+        \end{tabular}
+   \end{center}
+   A partir de $p_{X,Y,Z}$ se deducen tres funciones de masa de probabilidades bivariadas: 
+   $$p_{X,Y}(x,y)=\sum_{z}p_{X,Y,Z}(x,y,z),\qquad p_{X,Z}(x,z)=\sum_{y}p_{X,Y,Z}(x,y,z),\qquad p_{Y,Z}(y,z)=\sum_{x}p_{X,Y,Z}(x,y,z),$$
+   
+   \begin{center}
+        \begin{tabular}{|c|c|c|c|} \hline
+            { } & $p_{X,Y}(x,y)$ & $p_{X,Z}(x,z)$ & $p_{Y,Z}(y,z)$ \\ \hline\hline
+            $(0,0)$ & $1/4$ & $1/4$ & $1/4$ \\
+            $(0,1)$ & $1/4$ & $1/4$ & $1/4$ \\
+            $(1,0)$ & $1/4$ & $1/4$ & $1/4$ \\
+            $(1,1)$ & $1/4$ & $1/4$ & $1/4$ \\ \hline
+        \end{tabular}
+   \end{center}
+   y marginalizando las funciones de masa de probabilidades bivariadas anteriores obtenemos:
+
+   \begin{center}
+       \begin{tabular}{|c|c|c|c|} \hline 
+            { } & $p_X(x)$ & $p_Y(y)$ & $p_Z(z)$ \\ \hline\hline
+            $0$ &  $1/2$   &  $1/2$   &  $1/2$  \\
+            $1$ &  $1/2$   &  $1/2$   &  $1/2$  \\ \hline 
+       \end{tabular}
+   \end{center}
+   Esto es, $(X,Y,Z)$ es un vector aleatorio discreto de variables aleatorias Bernoulli con parámetro igual a $\frac{1}{2}$ en los tres casos, y con lo anterior es inmediato verificar que: 
+   $$p_X(x)p_Y(y)=p_{X,Y}(x,y), \qquad p_X(x)p_Z(z)=p_{X,Z}(x,z), \qquad p_Y(y)p_Z(z)=p_{Y,Z}(y,z),$$ 
+   lo que implica que $X$ e $Y$ son independientes, $X$ y $Z$ son independientes, $Y$ y $Z$ son independientes, por pares en los tres casos, pero no son conjuntamente independientes ya que, por ejemplo:
+   $$p_{X,Y,Z}(1,1,1) \,=\, 0 \,\neq\, \frac{1}{8} \,=\, p_X(1)p_Y(1)p_Z(1).$$ \qed 
+\end{ejem}
+
+Con vectores aleatorios de dimensión $3$ en adelante surge el concepto de \textit{independencia condicional.} Si $(X,Y,Z)$ es un vector aleatorio discreto con función de masa de probabilidades conjunta $p_{X,Y,Z},$ y a partir de ella deducimos las funciones de masa de probabilidades condicionales $p_{X,Y|Z},$ $p_{X|Z}$ y $p_{Y|Z},$ se dice, por ejemplo, que las variables aleatorias $X$ e $Y$ son \textit{condicionalmente independientes} dado $Z=z$ si:
+$$\prob(X=x,Y=y\,|\,Z=z) = \prob(X=x\,|\,Z=z)\prob(Y=y\,|\,Z=z),\,\, \text{ es decir si } \,\,\,p_{X,Y|Z}(x,y\,|\,z)=p_{X|Z}(x\,|\,z)p_{Y|Z}(y\,|\,z).$$
+En general, independencia condicional no necesariamente implica independencia no condicional, ni viceversa, como se ilustra en los siguientes ejemplos.
+
+\bigskip
+
+\begin{ejem}\label{ej:indepNoindepcond}
+      Continuando con el Ejemplo \ref{ej:BernoulliTri}, donde en particular se obtuvo que $Y$ y $Z$ son independientes. Obtenemos primero las funciones de masa de probabilidades condicionales univariadas siguientes:
+      \begin{center}
+        \begin{tabular}{|c|c|c||c|c|} \hline 
+            { } & $p_{Y|X}(y\,|\,0)$ & $p_{Y|X}(y\,|\,1)$ & $p_{Z|X}(z\,|\,0)$ & $p_{Z|X}(z\,|\,1)$  \\ \hline\hline
+            $0$ & $1/2$ &  $1/2$  & $1/2$ &  $1/2$ \\
+            $1$ & $1/2$ &  $1/2$  & $1/2$ &  $1/2$  \\ \hline 
+        \end{tabular}
+      \end{center}
+      Luego las funciones de masa de probabilidades condicionales bivariadas siguientes, y las comparamos versus los productos de las condicionales univariadas anteriores:
+      \begin{center}
+          \begin{tabular}{|c|c|c||c|c|} \hline
+            $(y,z)$ & $p_{Y,Z|X}(y,z\,|\,0)$ & $p_{Y|X}(y\,|\,0)p_{Z|X}(z\,|\,0)$ & $p_{Y,Z|X}(y,z\,|\,1)$ & $p_{Y|X}(y\,|\,1)p_{Z|X}(z\,|\,1)$  \\ \hline\hline
+            $(0,0)$ & $1/2$ & $1/4$ &  $0$  & $1/4$ \\
+            $(0,1)$ &  $0$  & $1/4$ & $1/2$ & $1/4$ \\
+            $(1,0)$ &  $0$  & $1/4$ & $1/2$ & $1/4$ \\
+            $(1,1)$ & $1/2$ & $1/4$ &  $0$  & $1/4$ \\ \hline
+        \end{tabular}
+      \end{center}
+      de donde claramente $p_{Y,Z|X}(y,z\,|\,x)\neq p_{Y|X}(y\,|\,x)p_{Z|X}(z\,|\,x),$ y por tanto $Y$ y $Z$ no son condicionalmente independientes dado $X=x,$ a pesar de que son independientes de forma no condicional. \qed 
+\end{ejem}
+
+\begin{ejem}\label{ej:indepcondNoindep}
+    Considere un vector aleatorio discreto $(X,Y,Z)$ cuya función de masa de probabilidades conjunta $p_{X,Y,Z}$ está definida de la siguiente forma, para algún $0<\theta<1:$
+    \begin{center}
+        \begin{tabular}{|c|c|} \hline
+		  $(x,y,z)$ & $p_{X,Y,Z}(x,y,z)$  \\ \hline\hline  
+		  $(0,0,0)$ & $1-\theta$  \\
+		  $(0,0,1)$ & $0$ \\ 
+		  $(0,1,0)$ & $0$ \\ 
+		  $(1,0,0)$ & $0$ \\
+		  $(0,1,1)$ & $0$ \\
+		  $(1,0,1)$ & $0$ \\
+		  $(1,1,0)$ & $0$ \\
+		  $(1,1,1)$ & $\theta$ \\ \hline 
+        \end{tabular}
+   \end{center}
+   A partir de $p_{X,Y,Z}$ se deducen tres funciones de masa de probabilidades bivariadas: 
+   $$p_{X,Y}(x,y)=\sum_{z}p_{X,Y,Z}(x,y,z),\qquad p_{X,Z}(x,z)=\sum_{y}p_{X,Y,Z}(x,y,z),\qquad p_{Y,Z}(y,z)=\sum_{x}p_{X,Y,Z}(x,y,z),$$
+   
+   \begin{center}
+        \begin{tabular}{|c|c|c|c|} \hline
+            { } & $p_{X,Y}(x,y)$ & $p_{X,Z}(x,z)$ & $p_{Y,Z}(y,z)$ \\ \hline\hline
+            $(0,0)$ & $1-\theta$ & $1-\theta$ & $1-\theta$ \\
+            $(0,1)$ & $0$ & $0$ & $0$ \\
+            $(1,0)$ & $0$ & $0$ & $0$ \\
+            $(1,1)$ & $\theta$ & $\theta$ & $\theta$ \\ \hline
+        \end{tabular}
+   \end{center}
+   y marginalizando las funciones de masa de probabilidades bivariadas anteriores obtenemos:
+
+   \begin{center}
+       \begin{tabular}{|c|c|c|c|} \hline 
+            { } & $p_X(x)$ & $p_Y(y)$ & $p_Z(z)$ \\ \hline\hline
+            $0$ &  $1-\theta$   &  $1-\theta$   &  $1-\theta$  \\
+            $1$ &  $\theta$   &  $\theta$   &  $\theta$  \\ \hline 
+       \end{tabular}
+   \end{center}
+   Esto es, $(X,Y,Z)$ es un vector aleatorio discreto de variables aleatorias Bernoulli con parámetro igual a $\theta$ en los tres casos. A partir de lo anterior podemos deducir las funciones de masa de probabilidades condicionales, univariadas y bivariadas, y luego comparar el producto de las condicionales univariadas con las condicionales bivariadas:
+
+   \begin{center}
+       \begin{tabular}{|c|c|c||c|c|} \hline 
+            { } & $p_{X|Z}(x\,|\,0)$ & $p_{Y|Z}(y\,|\,0)$ & $p_{X|Z}(x\,|\,1)$ & $p_{Y|Z}(y\,|\,1)$ \\ \hline\hline 
+            $0$ & $1$ & $1$ & $0$ & $0$  \\
+            $1$ & $0$ & $0$ & $1$ & $1$  \\ \hline
+       \end{tabular}
+   \end{center}
+
+   \begin{center}
+       \begin{tabular}{|c|c|c||c|c|} \hline 
+            $(x,y)$ & $p_{X,Y|Z}(x,y\,|\,0)$ & $p_{X|Z}(x\,|\,0)p_{Y|Z}(y\,|\,0)$ & $p_{X,Y|Z}(x,y\,|\,1)$ & $p_{X|Z}(x\,|\,1)p_{Y|Z}(y\,|\,1)$  \\ \hline\hline
+            $(0,0)$ & $1$ & $1$ & $0$ & $0$ \\ 
+            $(0,1)$ & $0$ & $0$ & $0$ & $0$ \\ 
+            $(1,0)$ & $0$ & $0$ & $0$ & $0$ \\ 
+            $(1,1)$ & $0$ & $0$ & $1$ & $1$ \\ \hline 
+       \end{tabular}
+   \end{center}
+   De esto último conluimos que $p_{X,Y|Z}(x,y\,|\,z\,)=p_{X|Z}(x\,|\,z)p_{Y|Z}(y\,|\,z),$ y por tanto $X$ e $Y$ son condicionalmente independientes dado $Z=z.$ Sin embargo, al comparar la función de masa de probabilidades conjunta (no condicional) $p_{X,Y}(x,y)$ con el producto de las funciones de masa de probabilidades (no condicionales) $p_X(x)p_Y(y)$obtenemos lo siguiente:
+
+   \begin{center}
+       \begin{tabular}{|c|c|c|} \hline 
+            $(x,y)$ & $p_{X,Y}(x,y)$ & $p_X(x)p_Y(y)$ \\ \hline\hline 
+            $(0,0)$ & $1-\theta$ & $(1-\theta)^2$  \\
+            $(0,1)$ &     $0$    & $(1-\theta)\theta$ \\ 
+            $(1,0)$ &     $0$    & $\theta(1-\theta)$ \\ 
+            $(1,1)$ &  $\theta$  & $\theta^2$ \\ \hline
+       \end{tabular}
+   \end{center}
+   de donde queda claro que $p_{X,Y}(x,y)\neq p_X(x)p_Y(y)$ y, por lo tanto, $X$ e $Y$ no son independientes, a pesar de que sí son condicionalmente independientes. \qed
+\end{ejem}
+
+
+\subsection{Caso absolutamente continuo}
+
+Consideremos ahora el caso en que $(X,Y)$ es un vector aleatorio absolutamente continuo con función de densidad conjunta $f_{X,Y},$ y por tanto las variables aleatorias componentes $X$ e $Y$ son absolutamente continuas, con funciones de densidad marginal $f_X(x)=\int_{-\infty}^{+\infty}f_{X,Y}(x,y)dy\,$ y $\,f_Y(y)=\int_{-\infty}^{+\infty}f_{X,Y}(x,y)dx,$ respectivamente. Si para algún $A\in\mathfrak{B}(\Runo)$ tenemos que $\prob(X\in A)>0,$ entonces para cualquier $B\in\mathfrak{B}(\Runo)$ la probabilidad condicional obtenida en (\ref{eq:probacond}) se calcula mediante:
+\begin{equation}\label{eq:probacond3}
+    \prob(Y\in B\,|\,X\in A) = \frac{\prob((X,Y)\in A\times B)}{\prob(X\in A)} = \frac{\iint_{A\times B}f_{X,Y}(x,y)\,dydx}{\int_A f_X(x)\,dx}\,.
+\end{equation}
+En lo anterior, si en particular utilizamos $B=\,]-\infty,t\,]$ para cualquier $t\in\Runo$ entonces obtenemos la función de distribución de probabilidades de $Y$ condicional en el evento $\{X\in A\}:$
+\begin{equation}\label{eq:probacond4}
+    F_{Y|X}(t\,|\,A) := \prob(Y\leq t\,|\,X\in A) \,=\,\frac{1}{\prob(X\in A)}\int_{-\infty}^{\,t}\int_A f_{X,Y}(x,y)\,dxdy \,=\, \frac{1}{\prob(X\in A)}\int_{-\infty}^{\,t}g(y)\,dy\,,
+\end{equation}
+donde $g(y):=\int_A f_{X,Y}(x,y)dx.$ Aplicando el Teorema Fundamental de Cálculo podemos obtener la derivada de $F_{Y|X}(t\,|\,A):$
+$$\frac{d}{dt}F_{Y|X}(t\,|\,A) \,=\, \frac{1}{\prob(X\in A)}\frac{d}{dt}\int_{-\infty}^{\,t}g(y)\,dy\,=\, \frac{1}{\prob(X\in A)}\,g(t) \,=\, \frac{1}{\prob(X\in A)}\int_A f_{X,Y}(x,t)dx\,,$$
+y con ello motivar la siguiente:
+
+\bigskip 
+
+\begin{defi}\label{def:fdpcond}
+    Sea $(X,Y)$ un vector aleatorio absolutamente continuo con función de densidad conjunta $f_{X,Y}.$ Para todo $A\in\mathfrak{B}(\Runo)$ tal que $\prob(X\in A)>0$ se denota y define la \textbf{función de densidad de probabilidades condicional} para $Y$ dado el evento $\{X\in A\}$ como:
+    $$f_{Y|X}(y\,|\,A) \,:=\, \frac{1}{\prob(X\in A)}\int_A f_{X,Y}(x,y)\,dx\,,$$
+    y análogamente, para todo $B\in\mathfrak{B}(\Runo)$ tal que $\prob(Y\in B)>0$ la función de densidad de probabilidades condicional para $X$ dado el evento $\{Y\in B\}$ como:
+    $$f_{X|Y}(x\,|\,B) \,:=\, \frac{1}{\prob(Y\in B)}\int_B f_{X,Y}(x,y)\,dy.$$ \qed
+\end{defi}
+
+Tanto $f_Y(y)$ como $f_{Y|X}(y\,|\,A)$ son funciones de densidad de probabilidades univariadas para la misma variable aleatoria absolutamente continua $Y,$ con la diferencia que $f_{Y|X}(y\,|\,A)$ toma en cuenta (o supone) que el evento $\{X\in A\}$ ha ocurrido, mientras que $f_Y(y)$ no lo toma en cuenta. Nótese que en particular $f_{Y|X}(y\,|\,\Runo)=f_Y(y),$ y análogamente $f_{X|Y}(x\,|\,\Runo)=f_X(x).$
+
+\medskip 
+
+Para el caso $A=\{x\}$ con $x\in\Runo,$ el evento $\{X=x\}$ tiene probabilidad cero en el caso de variables aleatorias continuas, y por tanto la ecuación (\ref{eq:probacond}) y la consecuente Definición \ref{def:fdpcond} no son directamente aplicables, pero puede aplicarse (\ref{eq:probacond}) a un conjunto $A_x(\varepsilon):=[x,x+\varepsilon]$ siempre que $\prob(X\in A_x(\varepsilon))>0$ para todo $\varepsilon>0,$ y que $f_X(x)>0,$ y luego intentar calcular el límite por la derecha $\varepsilon\rightarrow0+$ para obtener, primero, la función de distribución condicional de $Y$ dado que $X=x,$ y de ser posible, su derivada:
+\begin{eqnarray}\label{eq:probacond5}
+    F_{Y|X}(y\,|\,x) &:=& \prob(Y\leq y\,|\,X=x) = \lim_{\varepsilon\,\rightarrow\,0+}\prob(Y\leq y\,|\,X\in A_x(\varepsilon)) = \lim_{\varepsilon\,\rightarrow\,0+}\frac{\prob(x\leq X\leq x+\varepsilon\,,\,Y\leq y)}{\prob(x\leq X\leq x+\varepsilon)} \nonumber \\
+    &=& \lim_{\varepsilon\,\rightarrow\,0+}\frac{F_{X,Y}(x+\varepsilon,y) - F_{X,Y}(x,y)}{F_X(x+\varepsilon) - F_X(x)} = \lim_{\varepsilon\,\rightarrow\,0+}\frac{[F_{X,Y}(x+\varepsilon,y) - F_{X,Y}(x,y)]\,/\,\varepsilon}{[F_X(x+\varepsilon) - F_X(x)]\,/\,\varepsilon} \nonumber \\ 
+    &=& \frac{\frac{\partial}{\partial x}F_{X,Y}(x,y)}{\frac{d}{dx}F_X(x)} = \frac{1}{f_X(x)}\frac{\partial}{\partial x}\int_{-\infty}^{\,x}\int_{-\infty}^{\,y}f_{X,Y}(s,t)\,dtds \,\stackrel{\text{TFC}}{=}\, \frac{1}{f_X(x)}\int_{-\infty}^{\,y}f_{X,Y}(x,t)\,dt \nonumber \\ 
+    \frac{\partial}{\partial y}F_{Y|X}(y\,|\,x) &=&  \frac{1}{f_X(x)}\frac{\partial}{\partial y}\int_{-\infty}^{\,y}f_{X,Y}(x,t)\,dt \,\stackrel{\text{TFC}}{=}\, \frac{f_{X,Y}(x,y)}{f_X(x)} \,=:\, \varphi_x(y)\,,
+\end{eqnarray}
+donde las siglas TFC indican que se aplicó el Teorema Fundamental del Cálculo. Notemos que el miembro derecho de (\ref{eq:probacond5}) es solo función de la variable $y$ porque $x$ es un valor dado (fijo), y que cumple las propiedades de una función de densidad de probabilidades univariada, ya que $\varphi_x(y)\geq 0$ y:
+$$\int_{-\infty}^{+\infty}\varphi_x(y)\,dy \,=\, \frac{1}{f_X(x)}\int_{-\infty}^{+\infty}f_{X,Y}(x,y)\,dy \,=\, \frac{1}{f_X(x)}\,f_X(x) \,=\, 1\,,$$
+lo que motiva la siguiente:
+
+\begin{defi}\label{def:fdpcond2}
+    Sea $(X,Y)$ un vector aleatorio absolutamente continuo con función de densidad conjunta $f_{X,Y}.$ Para todo $x\in\Runo$ tal que función de densidad marginal $f_X(x)>0$ se denota y define la \textbf{función de densidad de probabilidades condicional} para $Y$ dado el evento $\{X=x\}$ como:
+    $$f_{Y|X}(y\,|\,x) \,:=\, \frac{f_{X,Y}(x,y)}{f_X(x)}\,,$$
+    y análogamente, para todo $y\in\Runo$ tal que la función de densidad marginal $f_Y(y)>0$ la función de densidad de probabilidades condicional para $X$ dado el evento $\{Y=y\}$ como:
+    $$f_{X|Y}(x\,|\,y) \,:=\, \frac{f_{X,Y}(x,y)}{f_Y(y)}\,.$$ \qed
+\end{defi}
+
+Tanto $f_Y(y)$ como $f_{Y|X}(y\,|\,x)$ son funciones de densidad de probabilidades univariadas para la misma variable aleatoria absolutamente continua $Y,$ con la diferencia que $f_{Y|X}(y\,|\,x)$ toma en cuenta (o supone) que el evento $\{X=x\}$ ha ocurrido, mientras que $f_Y(y)$ no lo toma en cuenta. Como $x\in\text{Ran}\,X,$ el valor $x$ se convierte en un \textit{parámetro} de la función de densidad de probabilidades $f_{Y|X}(y\,|\,x),$ ya que valores distintos de $x$ pudieran arrojar distintas funciones de densidad condicionales, es decir si $x_1\neq x_2$ podría (o no) resultar que $f_{Y|X}(y\,|\,x_1)\neq f_{Y|X}(y\,|\,x_2).$
+
+\medskip 
+
+Utilizamos $f_{Y|X}(y\,|\,x)$ en lugar de $f_Y(y)$ cuando requerimos hacer cálculo de probabilidades con la variable aleatoria absolutamente continua $Y$ tomando en cuenta la posible influencia del evento $\{X=x\}.$ Si para todo $x\in\text{Ran}\,X$ el evento $\{X=x\}$ no influye en el cálculo de probabilidades con la variable aleatoria $Y$ tendríamos lo siguiente:
+\begin{equation}\label{eq:indepabscont}
+    f_{Y|X}(y\,|\,x) = f_Y(y) \,\Leftrightarrow\, \frac{f_{X,Y}(x,y)}{f_X(x)} = f_Y(y) \,\Leftrightarrow\, f_{X,Y}(x,y) = f_X(x)f_Y(y)\,,
+\end{equation}
+y a la misma conclusión (\ref{eq:indepabscont}) llegaríamos partiendo de $f_{X|Y}(x\,|\,y)=f_X(x)$ para todo $y\in\text{Ran}\,Y.$ Dado un vector aleatorio absolutamente continuo, el que los valores de una de las variables no influya en el cálculo de probabilidades de otras nos conduce al concepto de \textit{independencia} entre variables aleatorias absolutamente continuas: 
+
+\bigskip 
+
+\begin{defi}\label{def:indepabscont}
+    Dado un vector aleatorio absolutamente continuo $(X,Y)$ con función de densidad de probabilidades conjunta $f_{X,Y},$ y funciones de densidad de probabilidades marginales $f_X$ y $f_Y,$ respectivamente, decimos que $X$ e $Y$ son \textbf{variables aleatorias independientes} si y solo si:
+    \begin{equation*}
+        f_{X,Y}(x,y) \,=\, f_X(x)f_Y(y)\,.
+    \end{equation*} \qed 
+\end{defi}
+
+Si de un vector aleatorio absolutamente continuo $(X,Y)$ conocemos su función de densidad de probabilidades conjunta $f_{X,Y},$ a partir de esta última podemos deducir las funciones de densidad de probabilidades marginales $f_X$ y $f_Y$ mediante (\ref{eq:marginalizafdpconjunta}), y solo en caso de que $f_X(x)f_Y(y)=f_{X,Y}(x,y)$ podemos entonces afirmar que $X$ e $Y$ son variables aleatorias independientes. En otro sentido, si solo conocemos las funciones de densidad de probabilidades marginales $f_X$ y $f_Y,$ solo en el caso de que sepamos además que $X$ e $Y$ son independientes podríamos entonces deducir que la función de densidad de probabilidades conjunta de $(X,Y)$ es $f_{X,Y}(x,y)=f_X(x)f_Y(y).$
+
+\bigskip
+
+% ejemplo f(x,y) = exp(-y)1{0<x<y}
+\begin{ejem}\label{ej:fdpbiv}
+   Consideremos la función $f:\Runo^2\rightarrow\Runo$ definida como:
+   $$f(x,y) \,:=\, e^{-y}\indic_{\{0\,<\,x\,<\,y\}}$$
+   Claramente se cumple que $f(x,y)\geq 0$ y además:
+   \begin{eqnarray*}
+    \iint_{\Runo^2}f(x,y)\,dxdy &=& \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}e^{-y}\indic_{\{0\,<\,x\,<\,y\}}\,dxdy = \int_{-\infty}^{+\infty}e^{-y}\indic_{\{y\,>\,0\}}\int_{0}^{\,y}dx = \int_{0}^{+\infty}ye^{-y}dy = 1\,,
+   \end{eqnarray*}
+   donde la la última igualdad se justifica porque el integrando es justamente la función de densidad de probabilidades de una variable aleatoria absolutamente continua Gamma$(2,1).$ \footnote{La función de densidad de probabilidades Gamma con parámetros $\alpha>0$ y $\beta>0$ está dada por $f(z\,|\,\alpha,\beta)=\frac{\beta^{\alpha}}{\Gamma(\alpha)}z^{\alpha-1}e^{-\beta z}\indic_{\{z\,>\,0\}}.$} Entonces $f$ cumple con las características de una función de densidad de probabilidades conjunta. Sea $(X,Y)$ un vector aleatorio absolutamente continuo con función de densidad conjunta de probabilidades $f_{X,Y}=f.$ Procedemos primero a deducir las funciones de densidad marginales de $X$ e $Y:$
+   \begin{eqnarray*}
+       f_X(x) &=& \int_{\Runo}f_{X,Y}(x,y)\,dy = \int_{-\infty}^{+\infty}e^{-y}\indic_{\{0\,<\,x\}}\indic_{\{x\,<\,y\}}\,dy = \indic_{\{x\,>\,0\}}\int_{x}^{+\infty}e^{-y}\,dy = e^{-x}\indic_{\{x\,>\,0\}}\,,
+   \end{eqnarray*}
+   que es la función de densidad de probabilidades de una variable aleatoria absolutamente continua Exponencial estándar (con parámetro $1$).\footnote{La función de densidad de probabilidades Exponencial con parámetro $\beta>0$ es un caso particular Gamma$(1,\beta),$ esto es: \linebreak $f(z\,|\,\beta)=\beta e^{-\beta z}\indic_{\{z\,>\,0\}}.$}
+   \begin{eqnarray*}
+       f_Y(y) &=& \int_{\Runo}f_{X,Y}(x,y)\,dx = \int_{-\infty}^{+\infty}e^{-y}\indic_{\{0\,<\,x\,<\,y\}}\,dx = e^{-y}\indic_{\{y\, \,>\,0\}}\int_{0}^{\,y}dx = ye^{-y}\indic_{\{y\, \,>\,0\}}\,,
+   \end{eqnarray*}
+   que es la función de densidad de probabilidades de una variable aleatoria absolutamente continua Gamma$(2,1).$
+   $$f_X(x)f_Y(y) \,=\, ye^{-(x+y)}\indic_{\{x\,>\,0\}}\indic_{\{y\,>\,0\}} \,\neq\, e^{-y}\indic_{\{0\,<\,x\,<\,y\}} = f_{X,Y}(x,y)$$
+   de donde concluimos que $X$ e $Y$ no son variables aleatorias independientes. Si $y$ es un valor dado tal que $f_Y(y)>0,$ que en este caso equivale a que $y>0,$ entonces la densidad de probabilidades de $X$ condicional en que $Y=y$ está dada por:
+   $$f_{X|Y}(x\,|\,y) \,=\, \frac{f_{X,Y}(x,y)}{f_Y(y)} \,=\, \frac{e^{-y}\indic_{\{0\,<\,x\,<\,y\}}}{ye^{-y}} \,=\, \frac{1}{y}\indic_{\{0\,<\,x\,<\,y\}}\,,$$
+   que es la función de densidad de probabilidades de una variable aleatoria absolutamente continua Uniforme$(0,y).$\footnote{La función de densidad de probabilidades Uniforme sobre un intervalo (abierto, cerrado, semiabierto) $|a,b|$ está dada por:\linebreak $f(z\,|\,a,b)=\frac{1}{b-a}\indic_{\{a\,<\,x\,<\,b\}}.$}
+   Si $x$ es un valor dado tal que $f_X(x)>0,$ que en este caso equivale a que $x>0,$ entonces la densidad de probabilidades de $Y$ condicional en que $X=x$ está dada por:
+   $$f_{Y|X}(y\,|\,x) \,=\, \frac{f_{X,Y}(x,y)}{f_Y(y)} \,=\, \frac{e^{-y}\indic_{\{y\,>\,x\}}}{e^{-x}} \,=\, e^{-(y-x)}\indic_{\{y\,>\,x\}}\,,$$
+   que es la función de densidad de probabilidades de una variable aleatoria absolutamente continua Exponencial$(x,1).$\footnote{La función de densidad de probabilidades Exponencial con parámetro de localización $\mu\in\Runo$ y parámetro de escala $\theta>0$ está dada por: $f(z\,|\,\mu,\theta)=\theta e^{-\theta(z-\mu)}\indic_{\{z\,>\,\mu\}},$ y es resultado de la transformación $Z:=\mu+W/\theta,$ donde $W$ es Exponencial estándar, esto es con función de densidad $f_W(w)=e^{-w}\indic_{\{w\,>\,0\}}.$} \qed 
+\end{ejem}
+
+Para tener idea del caso de vectores aleatorios absolutamente continuous de dimensión mayor que $2,$ basta con considerar, por ejemplo, el caso de un vector aleatorio $(X,Y,Z)$ con función de densidad de probabilidades conjunta $f_{X,Y,Z},$ en cuyo caso se pueden deducir funciones de densidad de probabilidades condicionales de dimensión $2,$ por ejemplo:
+$$f_{X,Z|Y}(x,z\,|\,y) \,=\, \frac{f_{X,Y,Z}(x,y,z)}{f_Y(y)}\,,\qquad \forall\,y: f_Y(y)>0\,,$$
+o bien de dimensión $1,$ por ejemplo:
+$$f_{Z|X,Y}(z\,|\,x,y) \,=\, \frac{f_{X,Y,Z}(x,y,z)}{f_{X,Y}(x,y)}\,,\qquad \forall\,(x,y): f_{X,Y}(x,y)>0\,.$$ Y también, análogamente al caso discreto, las variables aleatorias $X,$ $Y$ y $Z$ son conjuntamente independientes si y solo si $f_{X,Y,Z}(x,y,z)=f_X(x)f_Y(y)f_Z(z).$ De forma análoga al caso discreto, se pueden construir ejemplos de vectores aleatorios absolutamente continuos donde la independencia por pares de variables no implica necesariamente la independencia conjunta de tres.
+
+\medskip 
+
+Con vectores aleatorios de dimensión $3$ en adelante surge el concepto de \textit{independencia condicional.} Si $(X,Y,Z)$ es un vector aleatorio absolutamente continuo con función de densidad de probabilidades conjunta $f_{X,Y,Z},$ y a partir de ella deducimos las funciones de densidad de probabilidades condicionales $f_{X,Y|Z},$ $f_{X|Z}$ y $f_{Y|Z},$ se dice, por ejemplo, que las variables aleatorias $X$ e $Y$ son \textit{condicionalmente independientes} dado $Z=z$ si:
+$$f_{X,Y|Z}(x,y\,|\,z) \,=\, f_{X|Z}(x\,|\,z)f_{Y|Z}(y\,|\,z).$$
+De forma análoga al caso discreto, se pueden construir ejemplos que demuestran que, en general, independencia condicional no necesariamente implica independencia no condicional, ni viceversa.
+
+
+
+
+
+\newpage
+\section{Transformaciones}\label{sec:transf}
+
+% variable -> variable
+Recordemos primero el procedimiento para transformar una variable aleatoria en otra. Dada una variable aleatoria $X$ con determinada distribución de probabilidad (ya sea su función de distribución $F_X,$ o bien su función de densidad o masa de probabilidades $f_X,$ cuando sea el caso) se define otra variable aleatoria $Y:=g(X)$ mediante alguna función $g$ tal que su dominio contenga a $\text{Ran}\,X.$ ?`Cómo deducir la distribución de probabilidad de $Y$? Ya sea su función de distribución $F_Y,$ o bien, de ser el caso, su función de densidad o masa de probabilidades $f_Y.$ Primero, deducir el conjunto de valores que puede reportar la variable aleatoria $Y,$ esto es: 
+$$\text{Ran}\,Y \,=\, \{g(x)\,:\,x\in\text{Ran}\,X\}.$$ Si $\text{Ran}\,Y$ resulta ser un conjunto numerable, entonces $Y$ es evidentemente una variable aleatoria discreta, y por tanto en este caso bastará deducir su función de masa de probabilidades, para cualquier $y\in\text{Ran}\,Y:$
+$$p_Y(y) \,=\, \prob(Y=y) \,=\, \prob(g(X)=y) \,=\, \prob(X\in B_y)\,,$$
+donde $B_y=\{x\in\text{Ran}\,X\,:\,g(x)=y\},$ y  $\prob(X\in B_y)$ se calcula mediante la distribución de probabilidades de $X.$
+
+\bigskip 
+
+\begin{ejem}\label{ej:disadis}
+    Sea $X$ una variable aleatoria discreta uniforme sobre el conjunto $\{-1,0,1\},$ es decir con función de masa de probabilidades:
+    $$p_X(x) \,=\, \prob(X=x) \,=\, \frac{1}{3}\indic_{\{-1,0,1\}}(x).$$
+    Si utilizamos la función $g(x)=x^2$ para definir la variable aleatoria $Y:=g(X)=X^2$ entonces:
+    $$\text{Ran}\,Y \,=\,\{x^2\,:\,x\in\{-1,0,1\}\} \,=\, \{0,1\},$$
+    lo que implica, en este caso particular, que $Y$ es una variable aleatoria discreta \textit{Bernoulli}.
+    $$p_Y(1) \,=\, \prob(Y=1) \,=\, \prob(X^2=1) \,=\, \prob(X\in\{-1,1\}) \,=\, p_X(-1)+p_X(1) \,=\, \frac{2}{3}\,,$$
+    y por complemento $p_Y(0)=1-p_Y(1)=\frac{1}{3}.$ Esto es, $Y$ resulta ser una variable aleatoria Bernoulli con par\'ametro $\theta=\frac{2}{3}.$ \qed 
+\end{ejem}
+
+Si, en cambio, $\text{Ran}\,Y$ resulta ser un conjunto no numerable, entonces queda descartado que pueda tratarse de una variable aleatoria discreta, y por tanto es continua o mixta. En este caso procedemos a deducir su función de distribución $F_Y(y)=\prob(Y\leq y),$ y si $F_Y$ resulta ser una función continua en todo $\Runo$ entonces $Y$ es variable continua, pero si existe al menos un punto de discontinuidad entonces se trata de una variable aleatoria mixta:
+$$F_Y(y) \,=\, \prob(Y\leq y) \,=\, \prob(g(X)\leq y) \,=\, \prob(X\in C_y), \qquad y\in\Runo,$$
+donde $C_y:=\{x\in\text{Ran}\,X\,:\,g(x)\leq y\},$ y $\prob(X\in C_y)$ se calcula mediante la distribución de probabilidades de $X.$
+
+\bigskip
+
+\begin{ejem}\label{ej:contdis}
+    Sea $X$ una variable aleatoria continua uniforme sobre el intervalo abierto $\,]-1,1[\,,$ es decir con función de densidad de probabilidades: 
+    $$f_X(x) \,=\, \frac{1}{2}\indic_{\{-1\,<\,x\,<\,1\}}\,,$$
+    y por lo tanto con función de distribución de probabilidades:
+    $$F_X(x) \,=\, \prob(X\leq x) \,=\, \int_{-\infty}^{\,x}f_X(t)\,dt \,=\, \frac{x+1}{2}\indic_{\{-1\,<\,x\,<\,1\}} \,+\, \indic_{\{x\,\geq\,1\}}.$$
+    Si se define ahora la variable aleatoria $Y:=X^2$ entonces:
+    $$\text{Ran}\,Y \,=\, \{x^2\,:\,-1<x<1\} \,=\,[\,0,1[\,,$$
+    que al ser un conjunto no numerable implica que $Y$ es una variable aleatoria continua o mixta. Como $\text{Ran}\,Y=[\,0,1[\,,$ claramente si $y<0$ entonces $F_Y(y)=0,$ y si $y\geq 1$ entonces $F_Y(y)=1,$ por lo que solo falta analizar el caso cuando $0\leq y<1:$
+    $$F_Y(y) \,=\, \prob(Y\leq y) \,=\, \prob(X^2\leq y) \,=\, \prob(-\sqrt{y}\leq X\leq\sqrt{y}) \,=\, F_X(\sqrt{y})-F_X(-\sqrt{y})\,,$$
+    esto es, para cualquier $y\in\Runo:$
+    $$F_Y(y) \,=\, \begin{cases} 
+                        \,0\,, & \text{ si } \,y <0\,, \\
+                        \,F_X(\sqrt{y})-F_X(-\sqrt{y})\,, & \text{ si }\, 0\leq y < 1\,, \\
+                        \,1\,, & \text{ si }\, y\geq 1\,.
+    \end{cases}$$
+    Como $F_X$ es una función continua, y la función $h(y)=\sqrt{y}$ también, recordemos que composición de funciones continuas es continua, y por tanto cuando $0<y<1$ tenemos que $F_Y(y)$ es continua. Si $y<0$ entonces $F_Y(y)=0$ es la función constante cero, que es continua, y adicionalmente el límite por la izquierda $F_Y(0-)=0,$ mismo que coincide con $F_Y(0)=0,$ por lo que también en el punto $y=0$ la función $F_Y$ es continua. Si $y\geq 1$ entonces $F_Y(y)=1$ es la función constante $1,$ que es continua, y adicionalmente tiene límite por la izquierda $F_Y(1-)=1,$ por lo que también en el punto $y=1$ la función $F_Y$ es continua. Con lo anterior concluimos que $F_Y$ es continua en todo $\Runo$ y por tanto $Y$ es una variable aleatoria continua. \par\smallskip 
+
+    ¿Es $Y$ una variable aleatoria absolutamente continua? Es decir ¿es $F_X$ derivable en todo $\Runo,$ excepto quizás en una colección numerable de puntos aislados? Si $y<0$ o bien $y>1$ entonces $F_Y(y)$ es claramente derivable, con derivada cero por ser función constante en esos casos. La derivada por la izquierda en $y=0$ claramente es cero, pero la derivada de $F_Y(y)$ por la derecha no existe porque la función $h(y)=\sqrt{y}$ no es derivable en $y=0.$ Si $0<y<1$ tenemos que $F_Y(y)$ sí es derivable:
+    $$\frac{d}{dy}F_Y(y) \,=\, \frac{1}{2\sqrt{y}}\left(f_X(\sqrt{y}) \,+\, f_X(-\sqrt{y})\right)\,.$$
+    $F_Y(y)$ no es derivable en $y=1$ porque:
+    $$\frac{d}{dy}F_Y(1-) \,=\, \frac{1}{2}\left(f_X(1) \,+\, f_X(-1)\right) \,=\, \frac{1}{2} \,\neq\, 0 \,=\, \frac{d}{dy}F_Y(1+).$$
+    En resumen, $F_Y(y)$ es derivable en todo $\Runo$ excepto cuando $y\in\{0,1\},$ es decir excepto sobre una cantidad numerable de puntos aislados, por lo que se concluye, además, que $Y$ es una variable aleatoria absolutamente continua, con función de densidad de probabilidades:
+    $$f_Y(y) \,=\, \indic_{\{0\,<\,y\,<\,1\}}\frac{d}{dy}F_Y(y) \,=\, \frac{1}{2\sqrt{y}}\indic_{\{0\,<\,y\,<\,1\}}\,.$$ \qed 
+\end{ejem}
+
+
+\bigskip
+
+% vector -> variable
+Para transformaciones que involucran vectores aleatorios, primero consideraremos el caso en que se transforma un vector aleatorio $(X,Y)$ en una variable aleatoria $Z$ mediante alguna función $\varphi:\Runo^2\rightarrow\Runo,$ esto es:
+\begin{equation}\label{eq:transfvecvar}
+    Z \,:=\, \varphi(X,Y)\,.
+\end{equation}
+Nuevamente, el primer paso es deducir el conjunto de valores posibles para $Z,$ esto es:
+\begin{equation}\label{eq:RanZvXY}
+    \text{Ran}\,Z \,=\, \{\varphi(x,y)\,:\,(x,y)\in\text{Ran}\,(X,Y)\}\,.
+\end{equation}
+Si $\text{Ran}\,Z$ resulta ser un conjunto numerable, entonces $Z$ es una variable aleatoria discreta, y en este caso basta deducir su función de masa de probabilidades:
+\begin{equation}\label{eq:fmpZvXY}
+    p_Z(z) \,=\, \prob(Z=z) \,=\, \prob(\varphi(X,Y)=z) \,=\, \prob\big((X,Y)\in A_z\big)\,,
+\end{equation}
+donde $A_z=\{(x,y)\in\text{Ran}\,(X,Y)\,:\,\varphi(x,y)=z\},$ y $\prob\big((X,Y)\in A_z\big)$ se calcula mediante la distribución de probabilidad conjunta del vector aleatorio $(X,Y),$ ya sea su función de distribución conjunta $F_{X,Y},$ o bien, de existir, su función de densidad o de masa de probabilidad conjunta $f_{X,Y}.$
+
+\medskip 
+
+Si $\text{Ran}\,Z$ no es numerable, entonces $Z$ es variable aleatoria continua o mixta. Procedemos en este caso a deducir su función de distribución de probabilidades:
+\begin{equation}\label{eq:FZvXY}
+    F_Z(z) \,=\, \prob(Z\leq z) \,=\, \prob\big(\varphi(X,Y)\leq z\big) \,=\, \prob\big(\big(X,Y)\in D_z)\,,
+\end{equation}
+donde $D_z=\{(x,y)\in\text{Ran}\,(X,Y)\,:\,\varphi(x,y)\leq z\},$  y $\prob\big(\big(X,Y)\in D_z)$ se calcula mediante la distribución de probabilidad conjunta del vector aleatorio $(X,Y),$ ya sea su función de distribución conjunta $F_{X,Y},$ o bien, de existir, su función de densidad o de masa de probabilidad conjunta $f_{X,Y}.$ Si $F_Z$ resulta ser una función continua en todo $\Runo$ entonces $Z$ es una variable aleatoria continua, en caso contrario, existe al menos un punto de discontinuidad, y por tanto se trataría de una variable aleatoria mixta. 
+
+\bigskip 
+
+\begin{ejem}\label{ej:transfZvXY}
+    Sea $(X,Y)$ un vector aleatorio absolutamente continuo con función de densidad de probabilidades conjunta:
+    $$f_{X,Y}(x,y)=e^{-y}\indic_{\{0\,<\,x\,<\,y\}}\,.$$
+    (Se recomienda como ejercicio verificar que efectivamente $f_{X,Y}$ es una función de densidad conjunta, esto es que $f_{X,Y}(x,y)\geq 0$ para todo $(x,y)\in\Runo^2$ y que $\iint_{\Runo^2}f_{X,Y}(x,y)\,dxdy=1$).\par\medskip 
+
+    \noindent Utilizando una función $\varphi:\Runo^2\rightarrow\Runo$ especificada por $\varphi(x,y):=x+y$ definimos una variable aleatoria $Z:=\varphi(X,Y)=X+Y.$ Como $\text{Ran}\,(X,Y)=\{(x,y)\in\Runo^2\,:\,0<x<y\}$ entonces:
+    $$\text{Ran}\,Z \,=\, \{x+y\,:\,(x,y)\in\text{Ran}\,(X,Y)\} \,=\, \,]\,0,+\infty[\,,$$
+    que al resultar ser un conjunto no numerable implica que $Z$ es una variable aleatoria continua o mixta, por lo que procedemos a deducir su función de distribución de probabilidades $F_Z:\Runo\rightarrow[0,1].$ Como $\text{Ran}\,Z=\,]\,0,+\infty[\,$ es inmediato notar que si $z\leq 0$ entonces $F_Z(z)=0.$ Si $z>0$ entonces:
+    $$F_Z(z) \,=\, \prob(Z\leq z) \,=\, \prob(X+Y\leq z) \,=\, \prob\big((X,Y)\in B_z\big) \,=\, \iint_{B_z}f_{X,Y}(x,y)\,dxdy\,,$$
+    en donde:
+    $$B_z \,=\, \{(x,y)\in\text{Ran\,}(X,Y)\,:\,x+y\leq z\} \,=\, \left\{(x,y)\,:\,0<x<\frac{z}{2}\,,\,x<y\leq z-x\right\}\,,$$
+    por lo que:
+    $$F_Z(z) \,=\, \int_{0}^{z/2}\!\!\int_{x}^{z-x}\!  e^{-y}\,dydx \,=\, (1-2e^{-z/2}+e^{-z})\indic_{\{z\,>\,0\}}\,,$$
+    que claramente resulta ser una función continua, incluso en $z=0$ porque el límite por la derecha $F_Z(0+)=0,$ de lo que se concluye que $Z$ es una variable aleatoria continua. Más aún, si $z<0$ claramente $F_Z(z)$ es derivable por ser la función constante cero, con derivada cero. Si $z>0$ también es derivable:
+    $$\frac{d}{dz}F_Z(z) \,=\, e^{-z/2} - e^{-z} \,\longrightarrow 0 \,\,\text{cuando } z\rightarrow 0+$$
+    por lo que también es derivable en $z=0.$ Por lo anterior, deducimos además que $Z$ es una variable aleatoria absolutamente continua, con función de densidad de probabilidades:
+    $$f_Z(z) \,=\, (e^{-z/2} - e^{-z})\indic_{\{z\,>\,0\}}\,.$$ \qed
+\end{ejem}
+
+Aunque la explicación y ejemplo anterior fue para ilustrar la transformación de un vector aleatorio de dimensión $2$ en una variable aleatoria, el procedimiento para transformar un vector aleatorio de dimensión $n>2$ en una variable aleatoria es totalmente análogo, aunque los cálculos serán un tanto más complicados por las sumas o integrales múltiples que involucrarían.
+
+\bigskip 
+
+
+% vector -> vector
+Ahora abordaremos el caso en que se desea transformar un vector aleatorio en otro vector aleatorio. Partimos de un vector aleatorio $m$-dimensional $\mathbf{X}=(X_1,\ldots,X_m),$ con $m\geq 2,$ con función de distribución de probabilidades conjunta $F_{\mathbf{X}}(x_1,\ldots,x_m),$ y de ser el caso, con función de densidad o de masa de probabilidades conjunta $f_{\mathbf{X}}(x_1,\ldots,x_m).$ Por medio de una función $\psi:\Runo^m\rightarrow\Runo^{n},$ donde $n\geq 2,$ definimos un vector aleatorio $n$-dimensional:
+\begin{equation}\label{eq:transfvecvec}
+    \mathbf{Y} = (Y_1,\ldots,Y_n) \,:=\, \psi(\mathbf{X}) = \big(\psi_1(X_1,\ldots,X_m),\ldots,\psi_n(X_1,\ldots,X_m)\big)\,, 
+\end{equation}
+donde $\psi_1,\ldots,\psi_n$ son las funciones componentes de $\psi$ tales que $\psi_j:\Runo^m\rightarrow\Runo.$ El objetivo es deducir la distribución de probabilidades de $\mathbf{Y}.$ Nuevamente, lo primero es deducir el conjunto de valores que puede reportar el vector aleatorio $\mathbf{Y},$ esto es:
+$$\text{Ran}\,\mathbf{Y} \,=\, \{\psi(\mathbf{x})\,:\,\mathbf{x}\in\text{Ran}\,\mathbf{X}\}\,.$$
+Si $\text{Ran}\,\mathbf{Y}$ resulta ser un conjunto numerable, entonces $\mathbf{Y}$ es evidentemente un vector aleatorio discreto, y por tanto en este caso bastará deducir su función de masa de probabilidades conjunta, para cualquier $\mathbf{y}\in\text{Ran}\,\mathbf{Y}:$
+\begin{equation}\label{eq:fmpvecvec}
+     p_{\mathbf{Y}}(\mathbf{y}) \,=\, \prob(\mathbf{Y}=\mathbf{y}) \,=\, \prob(\psi(\mathbf{X})=\mathbf{y}) \,=\, \prob(\mathbf{X}\in B_{\mathbf{y}})\,,
+\end{equation}
+donde $B_{\mathbf{y}}=\{\mathbf{x}\in\text{Ran}\,\mathbf{X}\,:\,\psi(\mathbf{x})=\mathbf{y}\},$ y $\prob(\mathbf{X}\in B_{\mathbf{y}})$ se calcula mediante la distribución de probabilidades de $\mathbf{X}.$ Si $\text{Ran}\,\mathbf{Y}$ no es un conjunto numerable, entonces habría que deducir su función de distribución conjunta:
+\begin{equation}\label{eq:Fvecvec}
+     F_{\mathbf{Y}}(\mathbf{y}) \,=\, \prob(Y_1\leq y_1,\ldots,Y_n\leq y_n) \,=\, \prob\big(\psi_1(X_1,\ldots,X_m)\leq y_1,\ldots,\psi_n(X_1,\ldots,X_m)\leq y_n\big) \,=\, \prob(\mathbf{X}\in C_{y_1,\ldots,y_n})\,,
+\end{equation}
+donde $C_{y_1,\ldots,y_n}=\{\mathbf{x}\in\text{Ran}\,\mathbf{X}\,:\,\psi_1(\mathbf{x})\leq y_1,\ldots,\psi_n(\mathbf{x})\leq y_n\},$ y $\prob(\mathbf{X}\in C_{y_1,\ldots,y_n})$ se calcula por medio de la distribución de probabilidades de $\mathbf{X}.$ En el caso particular de que $\mathbf{Y}$ resulte ser un vector aleatorio absolutamente continuo entonces su función de densidad de probabilidades conjunta se obtiene mediante:
+\begin{equation}\label{eq:fdpvecvec}
+    f_{Y_1,\ldots,Y_n}(y_1,\ldots,y_n) \,=\, \frac{\partial^n}{\partial y_1 \cdots\partial y_n}F_{Y_1,\ldots,Y_n}(y_1,\ldots,y_n)\,.
+\end{equation}
+
+\bigskip 
+
+\begin{ejem}\label{ej:transfvecvec}
+    Sea $(X_1,X_2)$ un vector aleatorio absolutamente continuo con función de densidad conjunta $f_{X_1,X_2}$ y se define un vector aleatorio:
+    $$(Y_1,Y_2) \,:=\, (\alpha X_1+\beta\,,\,\gamma X_2+\delta)\,,$$
+    donde las constantes $\beta,\delta\in\Runo$ pero $\alpha>0$ y $\gamma>0.$ Tenemos entonces que:
+    $$\text{Ran}\,(Y_1,Y_2) \,=\,\{(\alpha x_1+\beta\,,\,\gamma x_2+\delta)\,:\,(x_1,x_2)\in\text{Ran}\,(X_1,X_2)\}\,.$$
+    Como $(X_1,X_2)$ es absolutamente continuo entonces $\text{Ran}\,(X_1,X_2)$ es un conjunto no numerable, y en consecuencia $\text{Ran}\,(Y_1,Y_2)$ también, por lo que procedemos a deducir su función de distribución conjunta de probabilidades:
+    \begin{eqnarray*}
+        F_{Y_1,Y_2}(y_1,y_2) &=& \prob(Y_1\leq y_1\,,\,Y_2\leq y_2) \,=\, \prob(\alpha X_1+\beta\leq y_1\,,\,\gamma X_2+\delta\leq y_2) \,=\, \prob\left(X_1\leq\frac{y_1-\beta}{\alpha}\,,\,X_2\leq\frac{y_2-\delta}{\gamma}\right) \\ 
+        &=& F_{X_1,X_2}\left(\frac{y_1-\beta}{\alpha}\,,\,\frac{y_2-\delta}{\gamma}\right)\,.
+    \end{eqnarray*}
+    Como $f_{X_1,X_2}(x_1,x_2)=\frac{\partial^2}{\partial x_1\partial x_2}F_{X_1,X_2}(x_1,x_2)$ entonces existe la función de densidad conjunta de $(Y_1,Y_2),$ es decir, resulta ser un vector aleatorio absolutamente continuo también:
+    $$f_{Y_1,Y_2}(y_1,y_2) \,=\, \frac{\partial^2}{\partial x_1\partial x_2}F_{X_1,X_2}\left(\frac{y_1-\beta}{\alpha}\,,\,\frac{y_2-\delta}{\gamma}\right) \,=\, \frac{1}{\alpha\gamma}f_{X_1,X_2}\left(\frac{y_1-\beta}{\alpha}\,,\,\frac{y_2-\delta}{\gamma}\right)\,.$$ \qed
+\end{ejem}
+    
+Aunque en el ejemplo anterior la dimensión del vector a transformar coincide con la del vector resultante, el proceso descrito en (\ref{eq:transfvecvec}), (\ref{eq:fmpvecvec}), (\ref{eq:Fvecvec}) y (\ref{eq:fdpvecvec}) no requiere que $m$ y $n$ sean iguales, ni impone restricción alguna sobre la transformación $\psi,$ se trata de un procedimiento totalmente general.
+
+
+
+\newpage
+\section{Distribuciones multivariadas}
+
+Existen diversas distribuciones de probabilidad multivariadas de uso común, discretas y absolutamente continuas, de las cuales, por su relevancia, se abordarán dos: una discreta (Multinomial) y otra absolutamente continua (Normal bivariada).
+
+
+% Multinomial
+\subsection{Multinomial}
+
+Un \textit{experimento aleatorio multinomial} es una generalización del caso abordado en el Ejemplo \ref{ej:experimBinomial}. Consiste en $n$ repeticiones independientes de un procedimiento que en cada repetición arroja alguno de entre $k\geq 2$ resultados posibles $\{a_1,\ldots,a_k\},$ cada uno con probabilidad $0<\theta_j<1$ de que en cada repetición salga el resutado $a_j\,,$ de modo que $\sum_{j\,=\,1}^k\theta_j=1,$ necesariamente. Identificaremos el espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ que representa a dicho experimento. El espacio muestral puede representarse de la siguiente forma:
+\begin{equation}
+    \Omega \,=\, \big\{(\omega_1,\ldots,\omega_n)\,:\,\omega_j\in\{a_1,\ldots,a_k\}\,,\,j\in\{1,\ldots,k\}\big\}\,,  
+\end{equation}
+con un total de $|\Omega|=k^n$ elementos, en general no equiprobable, salvo en el muy particular caso en que $\theta_j=\frac{1}{k}$ para todo $j\in\{1,\ldots,k\}.$ Dentro de la colección $\mathfrak{F}\subseteq\wp(\Omega)$ consideremos los siguientes $nk$ eventos:
+\begin{equation}
+   \mathcal{E}_{ij} \,\equiv\, \text{``En la $i$-ésima repetición sale el resultado $a_j$''}\,,\quad i\in\{1,\ldots,n\}\,,\quad j\in\{1,\ldots,k\}\,.  
+\end{equation}
+Los subconjuntos $E_{ij}\subset\Omega$ que representan a dichos eventos son: 
+\begin{equation}
+  E_{ij} \,=\, \big\{(\omega_1,\ldots,\omega_n)\in \Omega\,:\,\omega_i=a_j\big\}\,,  
+\end{equation}
+y por tanto tienen $|E_{ij}|=k^{n-1}$ elementos cada uno. Aunque todavía no hemos deducido una fórmula general para la medida de probabilidad $\prob,$ por hipótesis del experimento aleatorio se deduce que debe satisfacer $\prob(E_{ij})=\theta_j$ para cualquier repetición $i\in\{1,\ldots,n\}.$ Veremos a continuación que cualquier evento simple representado como $\{\boldsymbol{\omega}\},$ donde $\boldsymbol{\omega}=(\omega_1,\ldots,\omega_n)\in\Omega,$ puede reexpresarse en términos de los subconjuntos $E_{ij}.$ Sea la función $\varphi$ tal que $\varphi(\omega_i)=j$ si y solo si $\omega_i=a_j\,.$ Entonces:
+\begin{equation}
+    \{\boldsymbol{\omega}\} \,\equiv\, \{(\omega_1,\ldots,\omega_n)\} \,=\, \bigcap_{i\,=\,1}^n E_{i\varphi(\omega_i)}\,.
+\end{equation}
+Como por hipótesis se trata de repeticiones independientes, entonces los eventos representados por $E_{1\varphi(1)},\ldots,E_{n\varphi(n)}$ son independientes y, por lo tanto, la medida de probabilidad $\prob$ satisface:
+\begin{equation}\label{eq:multinom1}
+    \prob(\{\boldsymbol{\omega}\}) \,=\, \prob\left( \bigcap_{i\,=\,1}^n E_{i\varphi(\omega_i)} \right) \,=\, \prod_{i\,=\,1}^n\prob(E_{i\varphi(\omega_i)}) \,=\, \prod_{i\,=\,1}^n\theta_{\varphi(\omega_i)}\,. 
+\end{equation}
+Si denotamos como $r_j(\boldsymbol{\omega})\equiv r_j\big((\omega_1,\ldots,\omega_n)\big)$ el número de veces que aparece el resultado $a_j$ en $(\omega_1,\ldots,\omega_n),$ entonces $\sum_{j\,=\,1}^k r_j(\boldsymbol{\omega})=n$ y además (\ref{eq:multinom1}) puede reexpresarse como:
+\begin{equation}\label{eq:multinom2}
+    \prob(\{\boldsymbol{\omega}\}) \,=\, \prob\big(\{(\omega_1,\ldots,\omega_n)\}\big) \,=\,\prod_{j\,=\,1}^k\prod_{\,\,i\,:\,\varphi(\omega_i)\,=\,j}\!\!\!\!\!\!\theta_j \,\,=\, \prod_{j\,=\,1}^k\theta_j^{\,r_j(\boldsymbol{\omega})}\,.
+\end{equation}
+Como $\Omega$ es numerable, el tener una fórmula general (\ref{eq:multinom2}) para calcular la probabilidad de cualquier evento simple, representado por $\{\boldsymbol{\omega}\}$ para cualquier $\boldsymbol{\omega}\in\Omega,$ implica que para cualquier evento representado por un subconjunto $A\in\mathfrak{F}$ podemos calcular su probabilidad mediante (\ref{eq:pnumerable}), es decir:
+\begin{equation}
+    \prob(A) \,=\, \sum_{\boldsymbol{\omega}\,\in\,A}\prob\{\boldsymbol{\omega}\} \,=\, \sum_{\boldsymbol{\omega}\,\in\,A}\,\,\prod_{j\,=\,1}^k\theta_j^{\,r_j(\boldsymbol{\omega})}\,\,,
+\end{equation}
+y así ha quedado completamente especificado el espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ que corresponde al experimento aleatorio multinomial con parámetros $n\in\{1,2,\ldots\}$ y $(\theta_1,\ldots,\theta_k)$, donde $0<\theta_j<1,$ con $j\in\{1,\ldots,k\}$ y $k\geq 2,$ y con la condición $\theta_1+\cdots+\theta_k=1.$ Nótese que el caso particular $k=2$ corresponde al experimento aleatorio binomial analizado en el Ejemplo \ref{ej:experimBinomial}.
+
+\bigskip 
+
+Sobre el espacio de probabilidad $(\Omega,\mathfrak{F},\prob)$ del experimento aleatorio multinomial se pueden definir diversas variables o vectores aleatorios distintos, y cada uno inducirá su propia distribución de probabilidades, pero hay un vector aleatorio en particular que resulta con frecuencia de interés en este caso, y que es el que da origen a lo que usualmente se conoce como la \textit{distribución de probabilidad multinomial}, misma que desarrollaremos a continuación.
+
+\medskip 
+
+Definimos el vector aleatorio $\mathbf{X}:=(X_1,\ldots,X_k):\Omega\rightarrow\Runo^k$ de forma que para $j\in\{1,\ldots,k\}$ cada una de las variables aleatorias componentes se define mediante:
+\begin{equation}\label{eq:vecmultinom}
+    X_j(\boldsymbol{\omega}) \,:=\, \sum_{i\,=\,1}^n\indic_{\{\omega_i\,=\,a_j\}}\,,
+\end{equation}
+es decir, la variable aleatoria $X_j$ reporta el número de ocurrencias del resultado $a_j$ en las $n$ repeticiones independientes del experimento aleatorio multinomial. Esto implica que $X_j$ es, de hecho, una variable aleatoria binomial (véase Ejemplo \ref{ej:vaBinomial}) con parámetros $n$ y $\theta_j\,.$ Esto a su vez implica que el vector aleatorio $(X_1,\ldots,X_k)$ es discreto y, por tanto, su distribución de probabilidad queda bien representada mediante la deducción de su función de masa de probabilidades conjunta. Primero identificamos el rango de este vector aleatorio:
+\begin{equation}
+    \text{Ran\,}(X_1,\ldots,X_k) \,=\, \{(x_1,\ldots,x_k)\,:\,x_j\in\{0,\ldots n\}\,,\, x_1+\cdots +x_k=n\}\,,
+\end{equation}
+lo cual implica que $\prob(X_1+\cdots +X_k=n)=1.$ Esta última característica implica que $X_1,\ldots,X_n$ no son variables aleatorias independendientes ya que su suma siempre debe ser igual a $n.$ Buscamos una fórmula general para la función de masa de probabilidades conjunta, dado cualquier $(x_1,\ldots,x_k)\in\text{Ran}\,(X_1,\ldots,X_k):$
+\begin{eqnarray}\label{eq:fmpmultinom1}
+    p_{X_1,\ldots,X_k}(x_1,\ldots,x_k) &=& \prob(X_1=x_1\,,\,\ldots\,,\,X_k=x_k)\,, \nonumber \\
+    &=& \prob\big(\{\boldsymbol{\omega}\in\Omega:X_1(\boldsymbol{\omega})=x_1\}\,\cap\,\cdots\,\cap\,\{\boldsymbol{\omega}\in\Omega:X_k(\boldsymbol{\omega})=x_k\}\big)\,, \nonumber \\ 
+    &=& \prob(E_{x_1,\ldots x_k})\,,
+\end{eqnarray}
+donde $E_{x_1,\ldots x_k}$ representa una intersección de subconjuntos de $\mathfrak{F}$ que también pertenece a $\mathfrak{F}.$ Nótese que para cualquier $\boldsymbol{\omega}\in E_{x_1,\ldots x_k}$ la probabilidad es la misma, y es $\prob(\{\boldsymbol{\omega}\})=\theta_1^{\,x_1}\cdots\theta_k^{\,x_k}\,,$ por lo que:
+\begin{equation}\label{eq:fmpmulti}
+    p_{X_1,\ldots,X_k}(x_1,\ldots,x_k) \,=\, \sum_{\boldsymbol{\omega}\,\in\, E_{x_1,\ldots x_k}}\!\!\!\!\!\!\theta_1^{\,x_1}\cdots\theta_k^{\,x_k} \,=\,|E_{x_1,\ldots x_k}|\theta_1^{\,x_1}\cdots\theta_k^{\,x_k}\,.
+\end{equation}
+El número de elementos de $E_{x_1,\ldots x_k}$ es igual al número de formas distintas en que se pueden acomodar $x_1$ resultados $a_1,$ $x_2$ resultados $a_2,$ \ldots, y $x_k$ resultados $a_k,$ en las $n$ posiciones de cada $\boldsymbol{\omega}=(\omega_1,\ldots,\omega_n)\in E_{x_1,\ldots x_k}\,,$ esto es:
+\begin{eqnarray}\label{eq:coefmultinom}
+    |E_{x_1,\ldots x_k}| &=& \binom{n}{x_1}\binom{n-x_1}{x_2}\binom{n-x_1-x_2}{x_3}\cdots\binom{n-x_1-x_2-\cdots -x_{k-1}}{x_k} \nonumber \\
+    &=& \frac{n!}{x_1!(n-x_1!)}\cdot\frac{(n-x_1)!}{x_2!(n-x_1-x_2)!}\cdot\frac{(n-x_1-x_2)!}{x_3!(n-x_1-x_2-x_3)!}\cdots \nonumber \\
+    &=& \frac{n!}{x_1!\,x_2!\,\cdots\,x_k!} \,\,.
+\end{eqnarray}
+Sustituyendo (\ref{eq:coefmultinom}) en (\ref{eq:fmpmulti}) obtenemos la función de masa de probabilidades conjunta Multinomial$(n,\theta_1,\ldots,\theta_k):$
+\begin{equation}\label{eq:fmpmultinom2}
+    p_{X_1,\ldots,X_k}(x_1,\ldots,x_k\,|\,n,\theta_1,\ldots,\theta_k) \,=\, \frac{n!}{x_1!\,x_2!\,\cdots\,x_k!}\,\theta_1^{\,x_1}\cdots\theta_k^{\,x_k}\,\,,
+\end{equation}
+en donde para $j\in\{1,\ldots,k\}$ se deben cumplir las condiciones $0<\theta_j<1,$ $\theta_1+\cdots\theta_k=1,$ $x_j\in\{0,\ldots,n\},$ y $\,x_1+\cdots+x_k=n.$
+
+\medskip 
+
+Finalmente, para el caso particular $k=2$ notemos que se obtiene:
+\begin{equation}\label{eq:fmpbinomial2}
+    p_{X_1,X_2}(x_1,x_2\,|\,n,\theta_1,\theta_2) \,=\, \frac{n!}{x_1!\,x_2!}\,\theta_1^{\,x_1}\theta_2^{\,x_2}\,,
+\end{equation}
+sujeta a las restricciones $\theta_1+\theta_2=1$ y $x_1+x_2=n,$ equivalentes a que $\theta_2=1-\theta_1$ y $x_2=n-x_1,$ por lo que la fórmula (\ref{eq:fmpbinomial2}) puede expresarse solo en términos de $x_1$ y $\theta_1,$ es decir:
+\begin{equation}\label{eq:fmpbinomial3}
+    p_{X_1}(x_1\,|\,n,\theta_1) \,=\, \frac{n!}{x_1!\,(n-x_1)!}\,\theta_1^{\,x_1}(1-\theta_1)^{n-x_1}\indic_{\{0,\ldots,n\}}(x_1)\,,
+\end{equation}
+que es precisamente la función de masa de probabilidades de una variable aleatoria Binomial$(n,\theta_1),$ como en el Ejemplo \ref{ej:vaBinomial}.
+
+
+\newpage 
+% Normal bivariada
+\subsection{Normal bivariada}	
+
+Recordemos que una variable aleatoria absolutamemte continua $Z$ tiene distribución de probabilidad \textit{Normal estándar} si su función de densidad es:
+\begin{equation}\label{eq:fdpNormalStd}
+    f_Z(z) \,=\, \frac{1}{\sqrt{2\pi}}\,e^{-z^2/2}\,,\qquad z\in\Runo.
+\end{equation}
+La gráfica en $\Runo^2$ de la función $f_Z$ es de forma acampanada, alcanza su máximo en el punto $z=0,$ y de hecho es simétrica respecto a la recta $z=0.$ Entre algunas otras características, su esperanza es igual a cero y su varianza igual a $1:$
+\begin{equation*}
+    \esper(Z)=\int_{-\infty}^{+\infty}zf_Z(z)\,dz = 0\,,\qquad \vari(Z) = \esper[(Z-\esper(Z))^2] = \int_{-\infty}^{+\infty}z^2f_Z(z)\,dz = 1\,.
+\end{equation*}
+
+Lo anterior puede extenderse a un modelo paramétrico más general, conocido como \textit{familia de localización y dispersión}, agregando justamente un parámetro de localización $\mu\in\Runo$ y otro de dispersión $\sigma>0$ mediante la transformación lineal:
+\begin{equation}\label{eq:transfLocDisp}
+    X \,:=\, \mu \,+\, \sigma Z\,,
+\end{equation}    
+de donde es inmediato deducir que $\esper(X)=\mu$ y $\vari(X)=\sigma^2.$ La función de distribución de probabilidades de $Z$ no tiene fórmula explícita ya que no existe una fórmula explícita para la antiderivada de $e^{-z^2/2},$ pero ello no impide deducir la función de densidad de probabilidades de $X:$
+\begin{equation*}
+    F_X(x\,|\,\mu,\sigma) \,=\, \prob(X\leq x) \,=\, \prob(\mu+\sigma Z\leq x) \,=\, \prob\left(Z\leq \frac{x-\mu}{\sigma}\right) \,=\, F_Z\left(\frac{x-\mu}{\sigma}\right)\,,
+\end{equation*}
+a partir de lo cual deducimos:
+\begin{eqnarray}\label{eq:fdpNormal}
+    f_X(x\,|\,\mu,\sigma) &=& \frac{d}{dx}F_X(x\,|\,\mu,\sigma) \,=\, \frac{d}{dx}F_Z\left(\frac{x-\mu}{\sigma}\right) \,=\, \frac{1}{\sigma}f_Z\left(\frac{x-\mu}{\sigma}\right)  \nonumber \\
+                          &=& \frac{1}{\sigma\sqrt{2\pi}}e^{-(x-\mu)^2\,/\,2\sigma^2}\,\,,
+\end{eqnarray}
+a la que se le denomina función de densidad de probabilidades \textit{Normal} con parámetros $\mu\in\Runo$ y $\sigma>0.$ Si ahora buscamos construir una función de densidad conjunta para un vector aleatorio bivariado, que tenga un comportamiento análogo al de una función de densidad Normal univariada, un caso particular y sencillo sería considerar dos variables aleatorias $Z_1$ y $Z_2$ independientes, cada una con distribución de probabilidad Normal estándar como en (\ref{eq:fdpNormalStd}), y aplicando la Definición \ref{def:indepabscont} obtenemos:
+\begin{equation}\label{eq:NormalStd2indep}
+    f_{Z_1,Z_2}(z_1,z_2) \,=\, f_{Z_1}(z_1)\cdot f_{Z_2}(z_2) \,=\, \frac{1}{2\pi}\,\exp\left\{-\frac{1}{2}\left(z_1^2+z_2^2\right)\right\}\,,
+\end{equation}
+misma que graficada como superficie en $\Runo^3$ tiene forma acampanada, alcanzando su máximo en el punto $(z_1,z_2)=(0,0),$ donde $f_{Z_1,Z_2}(0,0)=\frac{1}{2\pi}<1.$ Más áun, tiene simetría radial respecto a dicho punto, ya que, para cualquier $0<t<\frac{1}{2\pi}\,,$ sus conjuntos de nivel son de la forma:
+\begin{equation}\label{eq:conjniv}
+\mathcal{N}_t \,:=\,\{(z_1,z_2)\in\Runo^2\,:\,f_{Z_1,Z_2}(z_1,z_2)=t\} \,=\, \{(z_1,z_2)\in\Runo^2\,:\,z_1^2+z_2^2=c_t^2\}\,,
+\end{equation}
+donde $c_t^2=-2\log 2\pi t\,,$ lo que significa que los conjuntos de nivel $t$ son \textit{circunferencias} con radio $c_t$ y con centro en $(z_1,z_2)=(0,0).$ Los resultados (\ref{eq:NormalStd2indep}) y (\ref{eq:conjniv}) solo son válidos si $Z_1$ y $Z_2$ son independientes, pero para un caso más general que incluya algún tipo de dependencia, se requiere añadir algún tipo de estructura y parámetro adicional. La forma más general de hacerlo es por medio de \textit{funciones cópula},\footnote{Para una introducción al respecto, se recomienda consultar: A. Erdely (2009) Cópulas y variables aleatorias: Una introducción. \textit{Miscelánea Matemática} \textbf{48}, 7--28.} tema que escapa al propósito del presente texto. Abordaremos una estructura particular, que tiene como consecuencia que los conjuntos de nivel sean \textit{elipses}, recordando que una circunferencia puede verse como caso particular de una elipse.
+
+\medskip 
+
+Despejando en la Definición \ref{def:fdpcond2} podemos expresar cualquier función de densidad conjunta bivariada como el producto de una de sus funciones de densidad marginal por una condicional, por ejemplo:
+\begin{equation}\label{eq:fdpcondNormal}
+    f_{Z_1,Z_2}(z_1,z_2) \,=\, f_{Z_1}(z_1)\cdot f_{Z_2|Z_1}(z_2\,|\,z_1)\,.
+\end{equation}
+Si escogemos para $Z_1$ una distribución de probabilidad Normal estándar como en (\ref{eq:fdpNormalStd}), y como distribución condicional para $Z_2$ dado $Z_1=z_1$ una Normal$(\,\rho z_1\,,\sqrt{1-\rho^2}\,)$ como en (\ref{eq:fdpNormal}), donde $-1<\rho<1$ fungirá como parámetro de la función de densidad conjunta, obtenemos:
+\begin{eqnarray}\label{eq:NormalBivStd}
+    f_{Z_1,Z_2}(z_1,z_2\,|\,\rho) &=& \frac{1}{\sqrt{2\pi}}\,\exp\left\{-\frac{z_1^2}{2}\right\}\,\cdot\,\frac{1}{\sqrt{2\pi(1-\rho^2)}}\,\exp\left\{-\frac{(z_2-\rho z_1)^2}{2(1-\rho^2)}\right\} \nonumber \\
+    &=& \frac{1}{2\pi\sqrt{1-\rho^2}}\,\exp\left\{ -\frac{1}{2(1-\rho^2)}\left(z_1^2\,+\,z_2^2\,-\,2\rho z_1z_2\right) \right\}\,.
+\end{eqnarray}
+Por construcción, la función de densidad conjunta (\ref{eq:NormalBivStd}) para el vector aleatorio $(Z_1,Z_2)$ tiene como densidad marginal para $Z_1$ una distribución Normal estándar univariada. Pero en (\ref{eq:fdpcondNormal}) podríamos haber elegido también utilizar la densidad marginal de $Z_2$ como Normal estándar univariada, especificar de manera análoga la densidad condicional de $Z_1$ dado $Z_2=z_2\,,$ y se llegaría a la misma fórmula (\ref{eq:NormalBivStd}), por lo que necesariamente, y en cualquier caso, en la densidad conjunta (\ref{eq:NormalBivStd}) ambas densidades marginales tienen distribución Normal estándar univariada. 
+
+\medskip 
+
+Notemos además que (\ref{eq:NormalBivStd}) es igual a (\ref{eq:NormalStd2indep}) si y solo si $\rho=0,$ lo que implica que para un vector aleatorio $(Z_1,Z_2)$ con función de densidad (\ref{eq:NormalBivStd}) las variables aleatorias $Z_1$ y $Z_2$ son independendientes si y solo si $\rho=0.$ En el otro extremo, conforme $\rho\rightarrow\pm 1$ notemos que $\vari(Z_2\,|\,Z_1=z_1)\rightarrow 0$ y que $\esper(Z_2\,|\,Z_1=z_1)\rightarrow\pm z_1,$ y viceversa si se analiza la condicional de $Z_1$ dado $Z_2=z_2.$ A la función de densidad conjunta (\ref{eq:NormalBivStd}) se le denomina función de densidad \textit{Normal bivariada estándar} con parámetro $-1<\rho<1.$ Es un sencillo ejercicio de geometría análitica demostrar que sus conjuntos de nivel son curvas, que en particular son elipses con ángulo de rotación  de $45$ grados.
+
+\medskip 
+
+Finalmente, la densidad Normal bivariada estándar (\ref{eq:NormalBivStd}) se puede extender al caso en que las densidades marginales tengan distribución de probabilidad Normal con distintos parámetros, aplicando la transformación (\ref{eq:transfLocDisp}) a ambas marginales, como en el Ejemplo \ref{ej:transfvecvec}, y así poder definir lo siguiente:
+
+\bigskip 
+
+\begin{defi}\label{def:NormalBivariada}
+    La función de densidad conjunta \textbf{Normal bivariada} con parámetros $\mu_X\in\Runo,$ $\mu_Y\in\Runo,$ $\sigma_X>0,$ $\sigma_Y>0,$ $-1<\rho<1,$ se define para todo $(x,y)\in\Runo^2$ mediante:
+    $$f(x,y\,|\,\mu_X,\mu_Y,\sigma_X,\sigma_Y,\rho) \,:=\, \frac{\exp\left\{ -\frac{1}{2(1-\rho^2)}\, \left( \left(\frac{x-\mu_X}{\sigma_X}\right)^2 \,-\, 2\rho\left(\frac{x-\mu_X}{\sigma_X}\right)\left(\frac{y-\mu_Y}{\sigma_Y}\right) \,+\, \left(\frac{y-\mu_Y}{\sigma_Y}\right)^2 \right) \right\}}{2\pi\sigma_X\sigma_Y\sqrt{1-\rho^2}}$$ \qed 
+\end{defi}
+
+Con base en lo anteriormente discutido, si un vector aleatorio $(X,Y)$ tiene función de densidad conjunta Normal bivariada con vector de parámetros $(\mu_X,\mu_Y,\sigma_X,\sigma_Y,\rho)$ entonces la distribución marginal de $X$ es Normal($\mu_X,\sigma_X$) y la marginal de $Y$ es Normal$(\mu_Y,\sigma_Y).$ $X$ e $Y$ son independientes si y solo si $\rho=0.$ Si $\rho\neq 0$ es inmediato deducir que la densidad condicional de $Y$ dado $X=x$ es Normal$(\mu_Y+\rho(\sigma_Y/\sigma_X)(x-\mu_X)\,,\,\sigma_Y\sqrt{1-\rho^2}),$ y resultado análogo para la condicional de $X$ dado $Y=y.$  Conforme $\rho$ se aproxima a $\pm 1,$ las varianzas condicionales se aproximan a cero, y las densidades condicionales de $Y|X=x$ y $X|Y=y$ se concentran cada vez más cerca de sus medias, que en este caso serían las rectas $y=\mu_Y+\rho(\sigma_Y/\sigma_X)(x-\mu_X)\,$ y $\,x=\mu_X+\rho(\sigma_X/\sigma_Y)(y-\mu_Y),$ respectivamente. Es posible también extender las ideas anteriores a vectores aleatorios de dimensiones mayores que $2,$ y obtener una función de densidad conjunta \textit{Normal Multivariada}, asunto que escapa al objetivo del presente texto, por lo que se sugiere consultar la bibliografía pertinente.\footnote{Por ejemplo: S. Kotz, N. Balakrishnan, N.L Johnson (2000) \textit{Continuous Multivariate Distributions.} Editorial: Wiley (Nueva York).}
+
+\newpage
+%%%%%% REFERENCIAS %%%%%%%%%
+	
+\begin{thebibliography}{99}
+		
+    \bibitem{Bernardo} Bernardo JM, Smith AFM (1994) \textit{Bayesian Theory.} Wiley.
+		
+    \bibitem{Casella} Casella G, Berger RL (2002) \textit{Statistical Inference.} Duxbury.
+		
+    \bibitem{Domínguez} Domínguez-Martínez JI (2001) \textit{Diseño y análisis de modelos de probabilidad.} Grupo Editorial Iberoamérica.
+		
+    \bibitem{García1} García-Álvarez MA (2005) \textit{Introducción a la teoría de la probabilidad. Primer curso.} Fondo de Cultura Económica.
+		
+    \bibitem{García2} García-Álvarez MA (2005) \textit{Introducción a la teoría de la probabilidad. Segundo curso.} Fondo de Cultura Económica.
+		
+    \bibitem{Grimmett} Grimmett G, Stirzaker D (2004) \textit{Probability and Random Processes.} Oxford University Press.
+		
+    \bibitem{Mood} Mood AM, Graybill FA, Boes DC (1974). \textit{Introduction to the Theory of Statistics.} McGraw-Hill.
+		
+\end{thebibliography}
+	
+\end{document}
