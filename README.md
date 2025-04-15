@@ -2,7 +2,7 @@
 Notas de apoyo para el curso y ejercicios.
 
 1. Vectores aleatorios y transformaciones
-   - 1.0 Introducción: repas de variables aleatorias
+   - 1.0 Introducción: repaso de variables aleatorias
    - 1.1 Distribución conjunta y marginales
    - 1.2 Distribuciones condicionales e independencia
    - 1.3 Transformaciones
